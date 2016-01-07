@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.freme.eservices.tilde.controller;
+package eu.freme.eservices.tilde;
 
 import static org.junit.Assert.assertTrue;
 
@@ -58,7 +58,7 @@ public class TildeETranslationTest {
 	}
 
 	private HttpRequestWithBody baseRequest() {
-		String url = testHelper.getAPIBaseUrl() + "e-translation/tilde";
+		String url = testHelper.getAPIBaseUrl() + "/e-translation/tilde";
 		return Unirest.post(url).queryString("source-lang", sourceLang)
 				.queryString("target-lang", targetLang);
 	}
