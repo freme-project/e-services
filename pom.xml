@@ -6,6 +6,7 @@
   <packaging>pom</packaging>
   <modules>
   	<module>broker-standalone</module>
+  	<module>tilde-services</module>
   </modules>
   
 	<parent>
