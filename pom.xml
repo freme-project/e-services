@@ -9,9 +9,9 @@
   </modules>
   
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.2.5.RELEASE</version>
+		<groupId>eu.freme</groupId>
+		<artifactId>freme-parent</artifactId>
+		<version>0.1-SNAPSHOT</version>
 	</parent>
 	
   <dependencies>
