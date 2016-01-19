@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import eu.freme.bservices.testhelper.api.MockupEndpoint;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,18 +64,18 @@ public class TildeETerminologyTest {
 	}
 	
 	@Test
-	public void testETermimnology() throws UnirestException, IOException,
+	public void testETerminology() throws UnirestException, IOException,
 			Exception {
 
 		HttpResponse<String> response = baseRequest()
 				.queryString("informat", "text")
-				.queryString("input", "hello world")
+				.queryString("input", "Show me the source of the light.")
 				.queryString("outformat", "turtle").asString();
 
 		validationHelper.validateNIFResponse(response,
 				RDFConstants.RDFSerialization.TURTLE);
 
-		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-terminology/example1.ttl"));
+		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-terminology/showmethesourceofthelight.ttl"));
 //		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/data.turtle"));
 		response = baseRequest().header("Content-Type", "text/turtle")
 				.body(data).asString();
@@ -84,7 +85,7 @@ public class TildeETerminologyTest {
 		assertTrue(response.getBody().length() > 0);
 
 		response = baseRequest()
-				.queryString("informat", "text").queryString("outformat", "turtle").body("hello world")
+				.queryString("informat", "text").queryString("outformat", "turtle").body("Show me the source of the light.")
 				.asString();
 		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
 

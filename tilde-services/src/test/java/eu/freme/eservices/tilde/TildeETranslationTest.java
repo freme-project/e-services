@@ -69,13 +69,13 @@ public class TildeETranslationTest {
 
 		HttpResponse<String> response = baseRequest()
 				.queryString("informat", "text")
-				.queryString("input", "hello world")
+				.queryString("input", "Show me the source of the light.")
 				.queryString("outformat", "rdf-xml").asString();
 
 		validationHelper.validateNIFResponse(response,
 				RDFConstants.RDFSerialization.RDF_XML);
 
-		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/data.turtle"));
+		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/showmethesourceofthelight.ttl"));
 		response = baseRequest().header("Content-Type", "text/turtle")
 				.body(data).asString();
 		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
@@ -83,14 +83,14 @@ public class TildeETranslationTest {
 		assertTrue(response.getStatus() == 200);
 		assertTrue(response.getBody().length() > 0);
 
-		data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/data.json"));
+		data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/showmethesourceofthelight.json"));
 		response = baseRequest().header("Content-Type", "application/json+ld")
 				.queryString("outformat", "json-ld").body(data).asString();
 		assertTrue(response.getStatus() == 200);
 		assertTrue(response.getBody().length() > 0);
 		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.JSON_LD);
 
-		data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/data.txt"));
+		data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/showmethesourceofthelight.txt"));
 		response = baseRequest()
 				.queryString("input", URLEncoder.encode(data, "UTF-8"))
 				.queryString("informat", "text").queryString("outformat", "n3")
