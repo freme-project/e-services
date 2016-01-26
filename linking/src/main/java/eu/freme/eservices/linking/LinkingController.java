@@ -72,7 +72,7 @@ public class LinkingController extends OwnedResourceManagingController<Template>
 
             // templateDAO.findOneById(templateIdStr);
             // Check read access and retrieve the template
-            Template template = getEntityDAO().findOneByIdentifier(id);
+            Template template = getEntityDAO().findOneByIdentifier(templateIdStr);
 
             HashMap<String, String> templateParams = new HashMap<>();
 
