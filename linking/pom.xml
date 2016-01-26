@@ -13,15 +13,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>eu.freme</groupId>
-            <artifactId>e-link</artifactId>
-            <version>0.4</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>eu.freme</groupId>
-                    <artifactId>common</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.linkeddatafragments</groupId>
+            <artifactId>ldf-client</artifactId>
+            <version>0.1</version>
         </dependency>
     </dependencies>
 

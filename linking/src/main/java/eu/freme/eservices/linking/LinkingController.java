@@ -8,7 +8,7 @@ import eu.freme.common.persistence.model.Template;
 import eu.freme.common.rest.NIFParameterFactory;
 import eu.freme.common.rest.NIFParameterSet;
 import eu.freme.common.rest.OwnedResourceManagingController;
-import eu.freme.eservices.elink.api.DataEnricher;
+import eu.freme.eservices.linking.api.DataEnricher;
 import eu.freme.eservices.linking.exceptions.InvalidNIFException;
 import eu.freme.eservices.linking.exceptions.InvalidTemplateEndpointException;
 import org.apache.log4j.Logger;
