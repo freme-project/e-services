@@ -1,5 +1,6 @@
 package eu.freme.eservices.linking;
 
+import com.google.common.base.Strings;
 import com.hp.hpl.jena.rdf.model.Model;
 import eu.freme.common.conversion.rdf.RDFConversionService;
 import eu.freme.common.exception.*;
@@ -11,6 +12,7 @@ import eu.freme.eservices.elink.api.DataEnricher;
 import eu.freme.eservices.linking.exceptions.InvalidNIFException;
 import eu.freme.eservices.linking.exceptions.InvalidTemplateEndpointException;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -163,11 +165,19 @@ public class LinkingController extends OwnedResourceManagingController<Template>
 
     @Override
     protected Template createEntity(String body, Map<String, String> parameters, Map<String, String> headers) throws BadRequestException {
-        return null;
+        JSONObject jsonObj = new JSONObject(body);
+        templateValidator.validateTemplateEndpoint(jsonObj.getString("endpoint"));
+
+        // AccessDeniedException can be thrown, if current
+        // authentication is the anonymousUser
+        return new Template(jsonObj);
     }
 
     @Override
     protected void updateEntity(Template template, String body, Map<String, String> parameters, Map<String, String> headers) throws BadRequestException {
-
+        if(!Strings.isNullOrEmpty(body) && !body.trim().isEmpty() && !body.trim().toLowerCase().equals("null") && !body.trim().toLowerCase().equals("empty")) {
+            JSONObject jsonObj = new JSONObject(body);
+            template.update(jsonObj);
+        }
     }
 }
