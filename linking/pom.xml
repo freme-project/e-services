@@ -9,13 +9,19 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>link</artifactId>
+    <artifactId>linking</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>eu.freme</groupId>
             <artifactId>e-link</artifactId>
             <version>0.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>eu.freme</groupId>
+                    <artifactId>common</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
