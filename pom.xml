@@ -5,7 +5,8 @@
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-  	<module>tilde-services</module>
+	  <module>tilde-services</module>
+	  <module>linking</module>
   </modules>
   
 	<parent>
