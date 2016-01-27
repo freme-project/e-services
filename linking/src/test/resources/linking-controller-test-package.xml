@@ -11,6 +11,8 @@
 	<import resource="classpath:spring-configurations/linking.xml" />
 	<import resource="classpath:spring-configurations/users.xml" />
 	<import resource="classpath:spring-configurations/test-helper.xml" />
+	<import resource="classpath:spring-configurations/logging.xml" />
+
 
 </beans>
 
