@@ -3,6 +3,7 @@ package eu.freme.eservices.linking;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import eu.freme.bservices.testhelper.AuthenticatedTestHelper;
 import eu.freme.bservices.testhelper.OwnedResourceManagingHelper;
@@ -55,6 +56,51 @@ public class LinkingControllerTest {
 
         logger.info("start CRUD check");
         ormh.checkCRUDOperations(new SimpleEntityRequest(body1), new SimpleEntityRequest(body2));
+    }
+
+    @Test
+    public void testLinking(){
+        // TODO: implement!
+        // also check private template access
+    }
+
+    @Test
+    public void TestELinkExploreSparqlMockup() throws UnirestException, IOException {
+        /*HttpResponse<String> response;
+
+        String rdf_resource = "http://dbpedia.org/resource/Berlin";
+        String endpoint = baseUrl+"/mockups/file/EXPLORE-Berlin.ttl";
+
+        rdf_resource = "http://dbpedia.org/resource/Berlin";
+
+        response= post("/explore")
+                .queryString("informat","turtle")
+                .queryString("outformat","turtle")
+                .queryString("endpoint-type","sparql")
+                .queryString("resource", rdf_resource)
+                .queryString("endpoint", endpoint)
+                .asString();
+
+        validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+        */
+    }
+
+    @Test
+    public void TestELinkExploreLdfMockup() throws UnirestException, IOException {
+/*
+        String rdf_resource = "http://dbpedia.org/resource/Berlin";
+        String endpoint = baseUrl+"/mockups/file/EXPLORE-ldf-resource-Berlin.ttl";
+
+        HttpResponse<String> response = post("/explore")
+                .queryString("informat","turtle")
+                .queryString("outformat","turtle")
+                .queryString("endpoint-type","ldf")
+                .queryString("resource", rdf_resource)
+                .queryString("endpoint", endpoint)
+                .asString();
+
+        validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+*/
     }
 
     //Used for constructiong Templates with sparql queries in E-link and E-Link Security Test
