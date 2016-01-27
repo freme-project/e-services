@@ -16,6 +16,12 @@
             <groupId>org.linkeddatafragments</groupId>
             <artifactId>ldf-client</artifactId>
             <version>0.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.hp.hpl.jena</groupId>
+                    <artifactId>jena</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
