@@ -25,7 +25,8 @@ public class LinkingControllerTest {
     private AuthenticatedTestHelper ath;
     private OwnedResourceManagingHelper<Template> ormh;
     final static String serviceUrl = "/e-link";
-    final static String mockupUrl = "/mockups/file/linking-ELINK.ttl";
+    final static String mockupUrl = "/mockups/file";
+    final static String mockupEntityUrl = "/linking-ELINK.ttl";
 
     public LinkingControllerTest() throws UnirestException {
         ApplicationContext context = IntegrationTestSetup.getContext("linking-controller-test-package.xml");
@@ -59,7 +60,7 @@ public class LinkingControllerTest {
     //Used for constructiong Templates with sparql queries in E-link and E-Link Security Test
     public String constructTemplate(String label, String query, String endpoint, String description, String endpointType, String visibility) throws JsonProcessingException {
         if(endpoint==null)
-            endpoint = ath.getAPIBaseUrl()+mockupUrl;
+            endpoint = ath.getAPIBaseUrl()+ mockupUrl + mockupEntityUrl;
         Template template = new Template(null, OwnedResource.Visibility.getByString(visibility), Template.Type.getByString(endpointType), endpoint, query, label, description);
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String serialization = ow.writeValueAsString(template);

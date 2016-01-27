@@ -19,6 +19,7 @@ package eu.freme.eservices.linking;
 
 import eu.freme.eservices.linking.exceptions.InvalidTemplateEndpointException;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -28,11 +29,17 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class TemplateValidator {
-    
+
+    Logger logger = Logger.getLogger(TemplateValidator.class);
+
     public TemplateValidator(){
     }
     
     public void validateTemplateEndpoint(String uri) {
+        if(uri.contains("localhost")) {
+            logger.warn("replacing \"localhost\" in the uri="+uri+" by \"127.0.0.1\"");
+            uri = uri.replace("localhost", "127.0.0.1");
+        }
         UrlValidator urlValidator = new UrlValidator();
         if(!urlValidator.isValid(uri)) {
             throw new InvalidTemplateEndpointException("The endpoint URL \""+uri+"\" is invalid.");
