@@ -30,6 +30,7 @@ import eu.freme.common.persistence.model.Template.Type;
 import org.apache.log4j.Logger;
 import org.linkeddatafragments.model.LinkedDataFragmentGraph;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -43,6 +44,7 @@ import java.util.Map;
  * @author Milan Dojchinovski <milan.dojchinovski@fit.cvut.cz>
  * http://dojchinovski.mk
  */
+@Component
 public class DataEnricher {
     
     @Autowired

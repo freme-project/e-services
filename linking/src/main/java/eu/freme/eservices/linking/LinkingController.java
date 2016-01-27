@@ -27,6 +27,7 @@ import java.util.Map;
 /**
  * Created by Arne Binder (arne.b.binder@gmail.com) on 26.01.2016.
  */
+@RestController
 @RequestMapping("/e-link")
 public class LinkingController extends OwnedResourceManagingController<Template> {
 
