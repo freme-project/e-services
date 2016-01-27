@@ -16,11 +16,17 @@
 	</parent>
 	
   <dependencies>
-  	<dependency>
-  		<groupId>eu.freme</groupId>
-  		<artifactId>common2</artifactId>
-  		<version>0.5-SNAPSHOT</version>
-  	</dependency>
+		<dependency>
+			<groupId>eu.freme</groupId>
+			<artifactId>common2</artifactId>
+			<version>0.5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		  <groupId>eu.freme.bservices</groupId>
+		  <artifactId>test-helper</artifactId>
+		  <version>0.1-SNAPSHOT</version>
+		  <scope>test</scope>
+		</dependency>
   </dependencies>
   
   	<repositories>
