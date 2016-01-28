@@ -74,12 +74,10 @@ public class LinkingControllerTest {
 
     @Test
     public void testELinkExploreSparqlMockup() throws UnirestException, IOException {
-        /*HttpResponse<String> response;
+        HttpResponse<String> response;
 
         String rdf_resource = "http://dbpedia.org/resource/Berlin";
         String endpoint = ath.getAPIBaseUrl()+ mockupUrl +"/linking-EXPLORE-Berlin.ttl";
-
-        rdf_resource = "http://dbpedia.org/resource/Berlin";
 
         response= Unirest.post(ath.getAPIBaseUrl()+serviceUrl+"/explore")
                 .queryString("informat","turtle")
@@ -90,21 +88,14 @@ public class LinkingControllerTest {
                 .asString();
 
         vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
-*/
-    }
 
-    /*@Test
-    public void testDummy() throws UnirestException {
-        HttpResponse<String> response =  Unirest.get(ath.getAPIBaseUrl()+mockupUrl+"/linking-EXPLORE-ldf-resource-Berlin.ttl").asString();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }*/
+    }
 
     @Test
     public void testELinkExploreLdfMockup() throws UnirestException, IOException {
-/*
+
         String rdf_resource = "http://dbpedia.org/resource/Berlin";
         String endpoint = ath.getAPIBaseUrl()+ mockupUrl + "/linking-EXPLORE-ldf-resource-Berlin.ttl";
-        endpoint = endpoint.replace("localhost", "127.0.0.1");
 
         HttpResponse<String> response =  Unirest.post(ath.getAPIBaseUrl()+serviceUrl+"/explore")
                 .queryString("informat","turtle")
@@ -116,7 +107,6 @@ public class LinkingControllerTest {
 
 
         vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
-*/
     }
 
     //Used for constructiong Templates with sparql queries in E-link and E-Link Security Test
