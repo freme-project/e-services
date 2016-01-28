@@ -33,6 +33,8 @@ public class LinkingController extends OwnedResourceManagingController<Template>
 
     Logger logger = Logger.getLogger(LinkingController.class);
 
+    public final static String templateIdentiferName = "templateid";
+
     @Autowired
     DataEnricher dataEnricher;
 
@@ -53,7 +55,7 @@ public class LinkingController extends OwnedResourceManagingController<Template>
     @RequestMapping(value = "/documents", method = RequestMethod.POST)
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public ResponseEntity<String> enrich(
-            @RequestParam(value = "templateid", required = true) String templateIdStr,
+            @RequestParam(value = templateIdentiferName, required = true) String templateIdStr,
             @RequestHeader(value = "Accept", required = false) String acceptHeader,
             @RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
             @RequestBody String postBody,

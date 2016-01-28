@@ -6,20 +6,19 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import eu.freme.bservices.testhelper.AuthenticatedTestHelper;
-import eu.freme.bservices.testhelper.OwnedResourceManagingHelper;
-import eu.freme.bservices.testhelper.SimpleEntityRequest;
-import eu.freme.bservices.testhelper.ValidationHelper;
+import eu.freme.bservices.testhelper.*;
 import eu.freme.bservices.testhelper.api.IntegrationTestSetup;
 import eu.freme.common.conversion.rdf.RDFConstants;
 import eu.freme.common.persistence.model.OwnedResource;
 import eu.freme.common.persistence.model.Template;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -109,6 +108,52 @@ public class LinkingControllerTest {
         vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
     }
 
+    @Test
+    public void testLinkingDocuments() throws Exception {
+
+        logger.info("testLinkingDocuments");
+
+        logger.info("create private template");
+        Template privateTemplate = ormh.createEntity(
+                new SimpleEntityRequest(constructTemplate("Some label",  readFile("linking-sparql1.ttl"), null, "Some description", "sparql", "private")),
+                        //.putHeader(OwnedResourceManagingController.visibilityParameterName, OwnedResource.Visibility.PRIVATE.name()),
+                ath.getTokenWithPermission(),
+                HttpStatus.OK
+        );
+        //String id = createTemplate(constructTemplate("Some label",  readFile("src/test/resources/rdftest/e-link/sparql1.ttl"), null, "Some description", "sparql", "private"), ath.getTokenWithPermission());
+
+        logger.info("create public template");
+        Template publicTemplate = ormh.createEntity(
+                new SimpleEntityRequest(constructTemplate("Some label", readFile("linking-sparql1.ttl"), null, "Some description", "sparql", "public")),
+                        //.putHeader(OwnedResourceManagingController.visibilityParameterName, OwnedResource.Visibility.PUBLIC.name()),
+                ath.getTokenWithPermission(),
+                HttpStatus.OK
+        );
+        //String idPublic = createTemplate(constructTemplate("Some label", readFile("src/test/resources/rdftest/e-link/sparql1.ttl"), null, "Some description", "sparql", "public"), ath.getTokenWithPermission());
+
+        logger.info("read nif to enrich");
+        String nifContent = readFile("data.ttl");
+        try {
+            logger.info("try to enrich via private template as other user... should not work");
+            LoggingHelper.loggerIgnore(LoggingHelper.accessDeniedExceptions);
+            assertEquals(HttpStatus.UNAUTHORIZED.value(), doLinking(nifContent, privateTemplate.getIdentifier(), ath.getTokenWithoutPermission()));
+            LoggingHelper.loggerUnignore(LoggingHelper.accessDeniedExceptions);
+            logger.info("try to enrich via private template as template owner... should work");
+            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, privateTemplate.getIdentifier(), ath.getTokenWithPermission()));
+            logger.info("try to enrich via public template as other user... should work");
+            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), ath.getTokenWithoutPermission()));
+            logger.info("try to enrich via public template as template owner... should work");
+            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), ath.getTokenWithPermission()));
+        } finally {
+            logger.info("delete private template");
+            ormh.deleteEntity(privateTemplate.getIdentifier(),ath.getTokenWithPermission(),HttpStatus.OK);
+            //deleteTemplate(id, ath.getTokenWithPermission());
+            logger.info("delete public template");
+            //deleteTemplate(idPublic, ath.getTokenWithPermission());
+            ormh.deleteEntity(publicTemplate.getIdentifier(),ath.getTokenWithPermission(),HttpStatus.OK);
+        }
+    }
+
     //Used for constructiong Templates with sparql queries in E-link and E-Link Security Test
     public String constructTemplate(String label, String query, String endpoint, String description, String endpointType, String visibility) throws JsonProcessingException {
         if(endpoint==null)
@@ -119,5 +164,24 @@ public class LinkingControllerTest {
         return serialization;
     }
 
+    private int doLinking(String nifContent, String templateId, String token) throws UnirestException, IOException {
+        HttpResponse<String> response = ath.addAuthentication(Unirest.post(ath.getAPIBaseUrl()+serviceUrl+"/documents"), token)
+                .queryString(LinkingController.templateIdentiferName, templateId)
+                .queryString("informat", "turtle")
+                .queryString("outformat", "turtle")
+                .body(nifContent)
+                .asString();
+        if(response.getStatus()==HttpStatus.OK.value()) {
+            vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+        }
+        return response.getStatus();
+    }
 
+
+    private String readFile(String filename) throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource(filename).getFile());
+        //File file = new File("src/main/resources/mockup-endpoint-data/"+filename);
+        return FileUtils.readFileToString(file);
+    }
 }
