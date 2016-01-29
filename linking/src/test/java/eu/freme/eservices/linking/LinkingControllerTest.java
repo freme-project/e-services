@@ -33,7 +33,7 @@ public class LinkingControllerTest {
 
     final static String serviceUrl = "/e-link";
     final static String mockupUrl = "/mockups/file";
-    final static String mockupEntityUrl = "/linking-ELINK.ttl";
+    final static String inputDataFileUrl = "/linking-ELINK.ttl";
 
     public LinkingControllerTest() throws UnirestException {
         ApplicationContext context = IntegrationTestSetup.getContext("linking-controller-test-package.xml");
@@ -66,13 +66,7 @@ public class LinkingControllerTest {
     }
 
     @Test
-    public void testLinking(){
-        // TODO: implement!
-        // also check private template access
-    }
-
-    @Test
-    public void testELinkExploreSparqlMockup() throws UnirestException, IOException {
+    public void testExploreSparql() throws UnirestException, IOException {
         HttpResponse<String> response;
 
         String rdf_resource = "http://dbpedia.org/resource/Berlin";
@@ -91,7 +85,7 @@ public class LinkingControllerTest {
     }
 
     @Test
-    public void testELinkExploreLdfMockup() throws UnirestException, IOException {
+    public void testExploreLdf() throws UnirestException, IOException {
 
         String rdf_resource = "http://dbpedia.org/resource/Berlin";
         String endpoint = ath.getAPIBaseUrl()+ mockupUrl + "/linking-EXPLORE-ldf-resource-Berlin.ttl";
@@ -157,7 +151,7 @@ public class LinkingControllerTest {
     //Used for constructiong Templates with sparql queries in E-link and E-Link Security Test
     public String constructTemplate(String label, String query, String endpoint, String description, String endpointType, String visibility) throws JsonProcessingException {
         if(endpoint==null)
-            endpoint = ath.getAPIBaseUrl()+ mockupUrl + mockupEntityUrl;
+            endpoint = ath.getAPIBaseUrl()+ mockupUrl + inputDataFileUrl;
         Template template = new Template(null, OwnedResource.Visibility.getByString(visibility), Template.Type.getByString(endpointType), endpoint, query, label, description);
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String serialization = ow.writeValueAsString(template);
