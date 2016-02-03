@@ -7,6 +7,7 @@
   <modules>
 	  <module>tilde-services</module>
 	  <module>linking</module>
+	  <module>example-service</module>
   </modules>
   
 	<parent>
