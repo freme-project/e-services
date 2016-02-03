@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.freme.eservices.tilde.translation;
+package eu.freme.eservices.tilde.terminology;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
