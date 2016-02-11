@@ -8,6 +8,7 @@
 	  <module>tilde-services</module>
 	  <module>linking</module>
 	  <module>example-service</module>
+	  <module>e-capitalization</module>
   </modules>
   
 	<parent>
