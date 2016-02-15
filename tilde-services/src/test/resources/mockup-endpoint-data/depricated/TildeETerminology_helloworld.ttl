@@ -1,0 +1,98 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>.
+@prefix its: <http://www.w3.org/2005/11/its>.
+@prefix itsrdf: <http://www.w3.org/2005/11/its/rdf#>.
+@prefix cc: <http://creativecommons.org/ns#>.
+@prefix : <https://term.tilde.com/terms/>.
+@prefix void: <http://rdfs.org/ns/void#>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix tbx: <http://tbx2rdf.lider-project.eu/tbx#>.
+@prefix decomp: <http://www.w3.org/ns/lemon/decomp#>.
+@prefix dct: <http://purl.org/dc/terms/>.
+@prefix ontolex: <http://www.w3.org/ns/lemon/ontolex#>.
+@prefix ldr: <http://purl.oclc.org/NET/ldr/ns#>.
+@prefix odrl: <http://www.w3.org/ns/odrl/2/>.
+@prefix dcat: <http://www.w3.org/ns/dcat#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+
+_:autos145952 rdfs:label "world"@en,
+                         "World"@en;
+              itsrdf:taConfidence 1 .
+<http://freme-project.eu/#char=0,11> nif:beginIndex "0"^^xsd:nonNegativeInteger;
+                                     nif:endIndex "11"^^xsd:nonNegativeInteger;
+                                     nif:isString "hello world"@en;
+                                     a nif:Context,
+                                       nif:RFC5147String,
+                                       nif:String.
+<http://freme-project.eu/#char=6,11> nif:anchorOf "world"@en;
+                                     nif:annotationUnit _:autos145952;
+                                     nif:beginIndex "6"^^xsd:nonNegativeInteger;
+                                     nif:endIndex "11"^^xsd:nonNegativeInteger;
+                                     nif:referenceContext <http://freme-project.eu/#char=0,11>;
+                                     a nif:RFC5147String;
+                                     itsrdf:term "yes";
+                                     itsrdf:termInfoRef <http://aims.fao.org/aos/agrovoc/c_24920>,
+                                                        :1139312,
+                                                        :2743707,
+                                                        :656121.
+<https://term.tilde.com/terms/> <http://purl.org/dc/elements/1.1/source> "";
+                                dct:type "TBX";
+                                tbx:encodingDesc """<p type=\"XCSURI\">http://www.ttt.org/oscarstandards/tbx/TBXXCS.xcs</p>"""^^<http://www.w3.org/1999/02/22-rdf-syntax-ns##XMLLiteral>;
+                                tbx:sourceDesc "<sourceDesc><p/></sourceDesc>"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns##XMLLiteral>;
+                                a tbx:MartifHeader,
+                                  dcat:Dataset.
+:1139312 tbx:definition """Als Universum (von lat.: universus = gesamt; von unus und versus = \"in eins gekehrt\") wird allgemein die Gesamtheit aller Dinge und Objekte bezeichnet. Im Speziellen meint man damit den Weltraum, auch Weltall oder Kosmos (von griechisch kósmos (Welt) Ordnung, Schmuck, Anstand; das Gegenstück zum Chaos), bezeichnet die Welt bzw. das Weltall sowohl als das sichtbare Universum als auch als geordnetes, harmonisches Ganzes."""@en,
+                        "The Universe consists of all matter, light, and other forms of radiation and energy [...]. The Universe also consists of everything that man believes to be present in space / time as a result of his theories. This includes the Earth, solar systems, stars, etc. [...] It is assumed to be about 15 billion years old."@en;
+         tbx:subjectField <https://term.tilde.com/domains/3606>,
+                          <https://term.tilde.com/domains/72>,
+                          <https://term.tilde.com/domains/TaaS-2100>,
+                          <https://term.tilde.com/domains/TaaS-2105>;
+         a skos:Concept;
+         rdfs:comment "Astronomie"@en,
+                      "Lenoch code: GO4"@en.
+:2743707 tbx:subjectField <https://term.tilde.com/domains/52>,
+                          <https://term.tilde.com/domains/TaaS-1100>;
+         a skos:Concept.
+:656121 tbx:definition """\"The Earth with all its inhabitants and all things upon it. (Source: WEBSTE)\""""@en;
+        tbx:subjectField <https://term.tilde.com/domains/5206>,
+                         <https://term.tilde.com/domains/TaaS-1100>;
+        a skos:Concept;
+        rdfs:comment "environmental policy"@en.
+:Raum-de a ontolex:LexicalEntry;
+         ontolex:canonicalForm <https://term.tilde.com/terms/Raum-de#CanonicalForm>;
+         ontolex:language <http://www.lexvo.org/page/iso639-3/ger/deu>;
+         ontolex:sense <https://term.tilde.com/terms/Raum-de#Sense>.
+<https://term.tilde.com/terms/Raum-de#CanonicalForm> ontolex:writtenRep "Raum"@de.
+<https://term.tilde.com/terms/Raum-de#Sense> ontolex:reference :1139312.
+:Welt-de tbx:reliabilityCode 3 ;
+         a ontolex:LexicalEntry;
+         ontolex:canonicalForm <https://term.tilde.com/terms/Welt-de#CanonicalForm>;
+         ontolex:language <http://www.lexvo.org/page/iso639-3/ger/deu>;
+         ontolex:sense <https://term.tilde.com/terms/Welt-de#Sense>.
+<https://term.tilde.com/terms/Welt-de#CanonicalForm> ontolex:writtenRep "Welt"@de.
+<https://term.tilde.com/terms/Welt-de#Sense> ontolex:reference :2743707,
+                                                               :656121.
+:World-en a ontolex:LexicalEntry;
+          ontolex:canonicalForm <https://term.tilde.com/terms/World-en#CanonicalForm>;
+          ontolex:language <http://www.lexvo.org/page/iso639-3/eng>;
+          ontolex:sense <https://term.tilde.com/terms/World-en#Sense>.
+<https://term.tilde.com/terms/World-en#CanonicalForm> ontolex:writtenRep "World"@en.
+<https://term.tilde.com/terms/World-en#Sense> ontolex:reference :1139312.
+:de a ontolex:Lexicon;
+    ontolex:entry :Raum-de,
+                  :Welt-de;
+    ontolex:language <http://www.lexvo.org/page/iso639-3/ger/deu>.
+:en a ontolex:Lexicon;
+    ontolex:entry :World-en,
+                  :world-en;
+    ontolex:language <http://www.lexvo.org/page/iso639-3/eng>.
+:world-en tbx:reliabilityCode 3 ;
+          a ontolex:LexicalEntry;
+          ontolex:canonicalForm <https://term.tilde.com/terms/world-en#CanonicalForm>;
+          ontolex:language <http://www.lexvo.org/page/iso639-3/eng>;
+          ontolex:sense <https://term.tilde.com/terms/world-en#Sense>.
+<https://term.tilde.com/terms/world-en#CanonicalForm> ontolex:writtenRep "world"@en.
+<https://term.tilde.com/terms/world-en#Sense> ontolex:reference :2743707,
+                                                                :656121.
