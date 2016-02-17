@@ -11,6 +11,7 @@ import eu.freme.bservices.testhelper.api.IntegrationTestSetup;
 import eu.freme.common.conversion.rdf.RDFConstants;
 import eu.freme.common.persistence.model.OwnedResource;
 import eu.freme.common.persistence.model.Template;
+import eu.freme.common.persistence.model.User;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -42,6 +43,19 @@ public class LinkingControllerTest {
         ormh = new OwnedResourceManagingHelper<>(serviceUrl,Template.class, ath, null);
         ath.authenticateUsers();
     }
+
+    @Test
+    public void templateSerialization() throws Exception {
+        User owner = new User("name", "password", User.roleUser);
+        Template template = new Template(owner,OwnedResource.Visibility.PUBLIC, Template.Type.SPARQL,"endpoint","query","label","description");
+
+        ObjectMapper om = new ObjectMapper();
+        //om.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);;
+        ObjectWriter ow = om.writer().withDefaultPrettyPrinter();
+        String serialization = ow.writeValueAsString(template);
+        logger.info(serialization);
+    }
+
 
     @Test
     public void testTemplateManaging() throws IOException, UnirestException {
