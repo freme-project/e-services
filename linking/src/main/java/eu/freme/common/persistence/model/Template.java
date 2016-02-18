@@ -35,9 +35,7 @@ import javax.persistence.Table;
 /**
  * Created by Arne Binder (arne.b.binder@gmail.com) on 01.10.2015.
  */
-@Component
 @Entity
-@Table(name = "template")
 public class Template extends OwnedResource {
 
     public enum Type {
@@ -61,49 +59,18 @@ public class Template extends OwnedResource {
 
     private Type endpointType;
 
+    // used for jpa construction
     @SuppressWarnings("unused")
-    public Template(User owner, Visibility visibility, Type endpointType, String endpoint, String query, String label, String description) {
-        super(owner, visibility, description);
-        this.endpoint = endpoint;
-        this.query = query;
-        this.label = label;
-        this.endpointType = endpointType;
-    }
-
-    @SuppressWarnings("unused")
-    public Template(Visibility visibility, Type endpointType, String endpoint, String query, String label, String description) {
-        super(visibility, description);
-        this.endpoint = endpoint;
-        this.query = query;
-        this.label = label;
-        this.endpointType = endpointType;
-    }
-
-    @SuppressWarnings("unused")
-    public Template(User owner, Visibility visibility, Type endpointType, Model model, String description){
-        super(owner, visibility, description);
-        setTemplateWithModel(model);
-        this.endpointType = endpointType;
-    }
-
-    @SuppressWarnings("unused")
-    public Template(Visibility visibility, Type endpointType, Model model, String description){
-        super(visibility, description);
-        setTemplateWithModel(model);
-        this.endpointType = endpointType;
-    }
+    public Template(){super(null);}
 
     public Template(JSONObject newData){
         // create with defaults
-        super(Visibility.PUBLIC, null);
+        super();
+        // set default
+        this.endpointType = Type.getByString(null);
         // set values
         update(newData);
-        // set default, if key "endpointType" was not in newData
-        this.endpointType = Type.getByString(newData.has("endpointType")?newData.getString("endpointType"):null);
     }
-
-    @SuppressWarnings("unused")
-    public Template(){super();}
 
 
     @JsonIgnore
