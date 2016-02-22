@@ -60,6 +60,14 @@ public class LinkingControllerTest {
     @Test
     public void testTemplateManaging() throws IOException, UnirestException {
         logger.info("start test");
+        Template template1 = new Template();
+        template1.setLabel("template1");
+        template1.setQuery("PREFIX dbpedia: <http://dbpedia.org/resource/>\nPREFIX dbpedia-owl: <http://dbpedia.org/ontology/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\nCONSTRUCT {\n  ?museum <http://xmlns.com/foaf/0.1/based_near> <@@@entity_uri@@@> .\n}\nWHERE {\n  <@@@entity_uri@@@> geo:geometry ?citygeo .\n  ?museum rdf:type <http://schema.org/Museum> .\n  ?museum geo:geometry ?museumgeo .\n  FILTER (<bif:st_intersects>(?museumgeo, ?citygeo, 10))\n} LIMIT 10");
+        template1.setEndpoint(ath.getAPIBaseUrl()+ mockupUrl + inputDataFileUrl);
+        template1.setDescription("description1");
+        template1.setEndpointType(Template.Type.SPARQL);
+        template1.setVisibility(OwnedResource.Visibility.PUBLIC);
+
         String body1 = constructTemplate(
                 "template1",
                 "PREFIX dbpedia: <http://dbpedia.org/resource/>\nPREFIX dbpedia-owl: <http://dbpedia.org/ontology/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\nCONSTRUCT {\n  ?museum <http://xmlns.com/foaf/0.1/based_near> <@@@entity_uri@@@> .\n}\nWHERE {\n  <@@@entity_uri@@@> geo:geometry ?citygeo .\n  ?museum rdf:type <http://schema.org/Museum> .\n  ?museum geo:geometry ?museumgeo .\n  FILTER (<bif:st_intersects>(?museumgeo, ?citygeo, 10))\n} LIMIT 10",
@@ -67,6 +75,15 @@ public class LinkingControllerTest {
                 "description1",
                 "sparql",
                 "PUBLIC");
+
+        Template template2 = new Template();
+        template2.setLabel("template2");
+        template2.setQuery("PREFIX dbpedia: <http://dbpedia.org/resource/> PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> CONSTRUCT { ?event <http://dbpedia.org/ontology/place> <@@@entity_uri@@@> . } WHERE { ?event rdf:type <http://dbpedia.org/ontology/Event> .  ?event <http://dbpedia.org/ontology/place> <@@@entity_uri@@@> .  } LIMIT 10");
+        template2.setEndpoint(ath.getAPIBaseUrl()+ mockupUrl + inputDataFileUrl);
+        template2.setDescription("description2");
+        template2.setEndpointType(Template.Type.SPARQL);
+        template2.setVisibility(OwnedResource.Visibility.PUBLIC);
+
         String body2 = constructTemplate(
                 "template2",
                 "PREFIX dbpedia: <http://dbpedia.org/resource/> PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> CONSTRUCT { ?event <http://dbpedia.org/ontology/place> <@@@entity_uri@@@> . } WHERE { ?event rdf:type <http://dbpedia.org/ontology/Event> .  ?event <http://dbpedia.org/ontology/place> <@@@entity_uri@@@> .  } LIMIT 10",
@@ -75,8 +92,9 @@ public class LinkingControllerTest {
                 "sparql",
                 "PUBLIC");
 
+
         logger.info("start CRUD check");
-        ormh.checkCRUDOperations(new SimpleEntityRequest(body1), new SimpleEntityRequest(body2));
+        ormh.checkCRUDOperations(new SimpleEntityRequest(body1), new SimpleEntityRequest(body2), template1, template2, "9999");
     }
 
     @Test
