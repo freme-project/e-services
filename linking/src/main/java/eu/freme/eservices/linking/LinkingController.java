@@ -58,7 +58,7 @@ public class LinkingController extends OwnedResourceManagingController<Template>
             @RequestParam(value = templateIdentiferName, required = true) String templateIdStr,
             @RequestHeader(value = "Accept", required = false) String acceptHeader,
             @RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
-            @RequestBody String postBody,
+            @RequestBody (required = false) String postBody,
             @RequestParam Map<String, String> allParams) {
         try {
 
