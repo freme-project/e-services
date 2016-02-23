@@ -1,8 +1,6 @@
 package eu.freme.eservices.linking;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -11,7 +9,6 @@ import eu.freme.bservices.testhelper.api.IntegrationTestSetup;
 import eu.freme.common.conversion.rdf.RDFConstants;
 import eu.freme.common.persistence.model.OwnedResource;
 import eu.freme.common.persistence.model.Template;
-import eu.freme.common.persistence.model.User;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -60,15 +57,8 @@ public class LinkingControllerTest {
     @Test
     public void testTemplateManaging() throws IOException, UnirestException {
         logger.info("start test");
-        Template template1 = new Template();
-        template1.setLabel("template1");
-        template1.setQuery("PREFIX dbpedia: <http://dbpedia.org/resource/>\nPREFIX dbpedia-owl: <http://dbpedia.org/ontology/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\nCONSTRUCT {\n  ?museum <http://xmlns.com/foaf/0.1/based_near> <@@@entity_uri@@@> .\n}\nWHERE {\n  <@@@entity_uri@@@> geo:geometry ?citygeo .\n  ?museum rdf:type <http://schema.org/Museum> .\n  ?museum geo:geometry ?museumgeo .\n  FILTER (<bif:st_intersects>(?museumgeo, ?citygeo, 10))\n} LIMIT 10");
-        template1.setEndpoint(ath.getAPIBaseUrl()+ mockupUrl + inputDataFileUrl);
-        template1.setDescription("description1");
-        template1.setEndpointType(Template.Type.SPARQL);
-        template1.setVisibility(OwnedResource.Visibility.PUBLIC);
 
-        String body1 = constructTemplate(
+        Template template1 = constructTemplate(
                 "template1",
                 "PREFIX dbpedia: <http://dbpedia.org/resource/>\nPREFIX dbpedia-owl: <http://dbpedia.org/ontology/>\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\nCONSTRUCT {\n  ?museum <http://xmlns.com/foaf/0.1/based_near> <@@@entity_uri@@@> .\n}\nWHERE {\n  <@@@entity_uri@@@> geo:geometry ?citygeo .\n  ?museum rdf:type <http://schema.org/Museum> .\n  ?museum geo:geometry ?museumgeo .\n  FILTER (<bif:st_intersects>(?museumgeo, ?citygeo, 10))\n} LIMIT 10",
                 null,
@@ -76,15 +66,7 @@ public class LinkingControllerTest {
                 "sparql",
                 "PUBLIC");
 
-        Template template2 = new Template();
-        template2.setLabel("template2");
-        template2.setQuery("PREFIX dbpedia: <http://dbpedia.org/resource/> PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> CONSTRUCT { ?event <http://dbpedia.org/ontology/place> <@@@entity_uri@@@> . } WHERE { ?event rdf:type <http://dbpedia.org/ontology/Event> .  ?event <http://dbpedia.org/ontology/place> <@@@entity_uri@@@> .  } LIMIT 10");
-        template2.setEndpoint(ath.getAPIBaseUrl()+ mockupUrl + inputDataFileUrl);
-        template2.setDescription("description2");
-        template2.setEndpointType(Template.Type.SPARQL);
-        template2.setVisibility(OwnedResource.Visibility.PUBLIC);
-
-        String body2 = constructTemplate(
+        Template template2 = constructTemplate(
                 "template2",
                 "PREFIX dbpedia: <http://dbpedia.org/resource/> PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> CONSTRUCT { ?event <http://dbpedia.org/ontology/place> <@@@entity_uri@@@> . } WHERE { ?event rdf:type <http://dbpedia.org/ontology/Event> .  ?event <http://dbpedia.org/ontology/place> <@@@entity_uri@@@> .  } LIMIT 10",
                 null,
@@ -94,7 +76,7 @@ public class LinkingControllerTest {
 
 
         logger.info("start CRUD check");
-        ormh.checkCRUDOperations(new SimpleEntityRequest(body1), new SimpleEntityRequest(body2), template1, template2, "9999");
+        ormh.checkCRUDOperations(new SimpleEntityRequest(template1.toJson()), new SimpleEntityRequest(template2.toJson()), template1, template2, "9999");
     }
 
     @Test
@@ -141,21 +123,17 @@ public class LinkingControllerTest {
 
         logger.info("create private template");
         Template privateTemplate = ormh.createEntity(
-                new SimpleEntityRequest(constructTemplate("Some label",  readFile("linking-sparql1.ttl"), null, "Some description", "sparql", "private")),
-                        //.putHeader(OwnedResourceManagingController.visibilityParameterName, OwnedResource.Visibility.PRIVATE.name()),
+                new SimpleEntityRequest(constructTemplate("Some label",  readFile("linking-sparql1.ttl"), null, "Some description", "sparql", "private").toJson()),
                 ath.getTokenWithPermission(),
                 HttpStatus.OK
         );
-        //String id = createTemplate(constructTemplate("Some label",  readFile("src/test/resources/rdftest/e-link/sparql1.ttl"), null, "Some description", "sparql", "private"), ath.getTokenWithPermission());
 
         logger.info("create public template");
         Template publicTemplate = ormh.createEntity(
-                new SimpleEntityRequest(constructTemplate("Some label", readFile("linking-sparql1.ttl"), null, "Some description", "sparql", "public")),
-                        //.putHeader(OwnedResourceManagingController.visibilityParameterName, OwnedResource.Visibility.PUBLIC.name()),
+                new SimpleEntityRequest(constructTemplate("Some label", readFile("linking-sparql1.ttl"), null, "Some description", "sparql", "public").toJson()),
                 ath.getTokenWithPermission(),
                 HttpStatus.OK
         );
-        //String idPublic = createTemplate(constructTemplate("Some label", readFile("src/test/resources/rdftest/e-link/sparql1.ttl"), null, "Some description", "sparql", "public"), ath.getTokenWithPermission());
 
         logger.info("read nif to enrich");
         String nifContent = readFile("data.ttl");
@@ -173,15 +151,12 @@ public class LinkingControllerTest {
         } finally {
             logger.info("delete private template");
             ormh.deleteEntity(privateTemplate.getIdentifier(),ath.getTokenWithPermission(),HttpStatus.OK);
-            //deleteTemplate(id, ath.getTokenWithPermission());
             logger.info("delete public template");
-            //deleteTemplate(idPublic, ath.getTokenWithPermission());
             ormh.deleteEntity(publicTemplate.getIdentifier(),ath.getTokenWithPermission(),HttpStatus.OK);
         }
     }
 
-    //Used for constructiong Templates with sparql queries in E-link and E-Link Security Test
-    public String constructTemplate(String label, String query, String endpoint, String description, String endpointType, String visibility) throws JsonProcessingException {
+    public Template constructTemplate(String label, String query, String endpoint, String description, String endpointType, String visibility) throws JsonProcessingException {
         if(endpoint==null)
             endpoint = ath.getAPIBaseUrl()+ mockupUrl + inputDataFileUrl;
         Template template = new Template();
@@ -191,10 +166,7 @@ public class LinkingControllerTest {
         template.setEndpoint(endpoint);
         template.setQuery(query);
         template.setLabel(label);
-        //null, , , , , label, description);
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String serialization = ow.writeValueAsString(template);
-        return serialization;
+        return template;
     }
 
     private int doLinking(String nifContent, String templateId, String token) throws UnirestException, IOException {
