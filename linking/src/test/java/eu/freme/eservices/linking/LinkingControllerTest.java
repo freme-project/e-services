@@ -33,7 +33,7 @@ public class LinkingControllerTest {
     final static String mockupUrl = "/mockups/file";
     final static String inputDataFileUrl = "/linking-ELINK.ttl";
 
-    public LinkingControllerTest() throws UnirestException {
+    public LinkingControllerTest() throws UnirestException, IOException {
         ApplicationContext context = IntegrationTestSetup.getContext("linking-controller-test-package.xml");
         ath = context.getBean(AuthenticatedTestHelper.class);
         vh = context.getBean(ValidationHelper.class);
