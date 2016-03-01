@@ -29,7 +29,6 @@ import eu.freme.common.persistence.model.Template;
 import eu.freme.common.persistence.model.Template.Type;
 import org.apache.log4j.Logger;
 import org.linkeddatafragments.model.LinkedDataFragmentGraph;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
@@ -46,9 +45,6 @@ import java.util.Map;
  */
 @Component
 public class DataEnricher {
-    
-    @Autowired
-    TemplateDAO templateDAO;
 
     private boolean initialized = false;
     private final String basePath = "http://www.freme-project.eu/data/templates/"; 
@@ -108,11 +104,14 @@ public class DataEnricher {
                 }
 
                 String endpoint = template.getEndpoint();
+//                logger.error(endpoint);
+//                logger.error(query);
                 // Executing the enrichement.
                 QueryExecution e1 = QueryExecutionFactory.sparqlService(endpoint, query);
                 Model resModel1 = e1.execConstruct();
                 enrichment.add(resModel1);
                 e1.close();
+                Thread.sleep(400);
             }
             
             model.add(enrichment);
