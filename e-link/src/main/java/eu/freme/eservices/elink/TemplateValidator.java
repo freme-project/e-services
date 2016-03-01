@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.freme.eservices.linking;
+package eu.freme.eservices.elink;
 
-import eu.freme.eservices.linking.exceptions.InvalidTemplateEndpointException;
+import eu.freme.eservices.elink.exceptions.InvalidTemplateEndpointException;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;

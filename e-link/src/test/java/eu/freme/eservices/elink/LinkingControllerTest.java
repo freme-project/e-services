@@ -1,4 +1,4 @@
-package eu.freme.eservices.linking;
+package eu.freme.eservices.elink;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.HttpResponse;

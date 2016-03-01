@@ -1,4 +1,4 @@
-package eu.freme.eservices.linking;
+package eu.freme.eservices.elink;
 
 import com.google.common.base.Strings;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -8,9 +8,9 @@ import eu.freme.common.persistence.model.Template;
 import eu.freme.common.rest.NIFParameterFactory;
 import eu.freme.common.rest.NIFParameterSet;
 import eu.freme.common.rest.OwnedResourceManagingController;
-import eu.freme.eservices.linking.api.DataEnricher;
-import eu.freme.eservices.linking.exceptions.InvalidNIFException;
-import eu.freme.eservices.linking.exceptions.InvalidTemplateEndpointException;
+import eu.freme.eservices.elink.api.DataEnricher;
+import eu.freme.eservices.elink.exceptions.InvalidNIFException;
+import eu.freme.eservices.elink.exceptions.InvalidTemplateEndpointException;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

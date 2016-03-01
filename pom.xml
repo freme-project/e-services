@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
   <modules>
 	  <module>tilde-services</module>
-	  <module>linking</module>
+	  <module>e-link</module>
   </modules>
   
 	<parent>

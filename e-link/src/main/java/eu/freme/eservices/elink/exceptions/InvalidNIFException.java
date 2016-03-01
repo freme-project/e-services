@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.freme.eservices.linking.exceptions;
+package eu.freme.eservices.elink.exceptions;
 
 import eu.freme.common.exception.FREMEHttpException;
 import org.springframework.http.HttpStatus;
@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 @SuppressWarnings("serial")
 @ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="")
-public class InvalidTemplateEndpointException extends FREMEHttpException {
+public class InvalidNIFException extends FREMEHttpException {
 	
-	public InvalidTemplateEndpointException(){
+	public InvalidNIFException(){
 		
 	}
-	public InvalidTemplateEndpointException(String msg){
+	public InvalidNIFException(String msg){
 		super(msg);
 	}
 }
