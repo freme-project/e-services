@@ -8,7 +8,7 @@
 	http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<import resource="classpath:spring-configurations/freme-common.xml" />
-	<import resource="classpath:spring-configurations/linking.xml" />
+	<import resource="classpath:spring-configurations/e-link.xml" />
 	<import resource="classpath:spring-configurations/users.xml" />
 	<import resource="classpath:spring-configurations/test-helper.xml" />
 	<import resource="classpath:spring-configurations/logging.xml" />
