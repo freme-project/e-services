@@ -12,6 +12,7 @@ import eu.freme.common.persistence.model.Template;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -78,7 +79,7 @@ public class LinkingControllerTest {
         logger.info("start CRUD check");
         ormh.checkCRUDOperations(new SimpleEntityRequest(template1.toJson()), new SimpleEntityRequest(template2.toJson()), template1, template2, "9999");
     }
-
+    @Ignore
     @Test
     public void testExploreSparql() throws UnirestException, IOException {
         HttpResponse<String> response;
@@ -97,7 +98,7 @@ public class LinkingControllerTest {
         vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
 
     }
-
+    @Ignore
     @Test
     public void testExploreLdf() throws UnirestException, IOException {
 
@@ -186,7 +187,7 @@ public class LinkingControllerTest {
     private String readFile(String filename) throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource(filename).getFile());
-        //File file = new File("src/main/resources/mockup-endpoint-data/"+filename);
+        //File file = new File("src/main/resources/mockup-endpoint-mockup-endpoint-data/"+filename);
         return FileUtils.readFileToString(file);
     }
 }

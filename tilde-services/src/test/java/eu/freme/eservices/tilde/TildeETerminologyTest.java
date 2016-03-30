@@ -76,7 +76,7 @@ public class TildeETerminologyTest {
 				RDFConstants.RDFSerialization.TURTLE);
 
 		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-terminology/showmethesourceofthelight.ttl"));
-//		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/data.turtle"));
+//		String mockup-endpoint-data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/mockup-endpoint-data.turtle"));
 		response = baseRequest().header("Content-Type", "text/turtle")
 				.body(data).asString();
 		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);

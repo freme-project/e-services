@@ -115,7 +115,7 @@ public class Template extends OwnedResource {
         result.enterCriticalSection(false);
 
         try {
-            Resource resource = result.createResource("http://www.freme-project.eu/data/templates/" + this.getId());
+            Resource resource = result.createResource("http://www.freme-project.eu/mockup-endpoint-data/templates/" + this.getId());
             result.add(resource, RDF.type, result.getResource("http://www.freme-project.eu/ns#Template"));
             result.add(resource, result.getProperty("http://www.freme-project.eu/ns#templateId"), this.getId()+"");
             result.add(resource, result.getProperty("http://www.freme-project.eu/ns#query"), this.getQuery());

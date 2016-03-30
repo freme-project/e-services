@@ -44,7 +44,7 @@ public class EPublishingService {
 
 	/**
      * Creates an EPUB3 file from the input stream.
-     * @param metadata  Some extra meta data
+     * @param metadata  Some extra meta mockup-endpoint-data
      * @param in        The input. It is supposed to be a zip file. The caller of this method is responsible for closing the stream!
      * @return          The EPUB. It is the binary contents of a zipped EPUB-3 file.
      * @throws InvalidZipException
@@ -53,7 +53,7 @@ public class EPublishingService {
      * @throws MissingMetadataException
 	 */
     public byte[] createEPUB(Metadata metadata, InputStream in) throws InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
-        // initialize the class that parses the input, and passes data to the EPUB creator
+        // initialize the class that parses the input, and passes mockup-endpoint-data to the EPUB creator
         File unzippedPath = new File(tempFolderPath, "freme_epublishing_" + System.currentTimeMillis());
         FileUtils.forceDeleteOnExit(unzippedPath);
 

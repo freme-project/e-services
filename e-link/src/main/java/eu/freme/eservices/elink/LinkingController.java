@@ -49,7 +49,7 @@ public class LinkingController extends OwnedResourceManagingController<Template>
 
     // Enriching using a template.
     // POST /e-link/enrich/
-    // Example: curl -X POST -d @data.ttl
+    // Example: curl -X POST -d @mockup-endpoint-data.ttl
     // "http://localhost:8080/e-link/enrich/documents/?outformat=turtle&templateid=3&limit-val=4"
     // -H "Content-Type: text/turtle"
     @RequestMapping(value = "/documents", method = RequestMethod.POST)

@@ -47,7 +47,7 @@ import java.util.Map;
 public class DataEnricher {
 
     private boolean initialized = false;
-    private final String basePath = "http://www.freme-project.eu/data/templates/"; 
+    private final String basePath = "http://www.freme-project.eu/mockup-endpoint-data/templates/";
     private final String templatesNs = "http://www.freme-project.eu/ns#";
 
     static Logger logger = Logger.getLogger(DataEnricher.class);
