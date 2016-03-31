@@ -8,6 +8,7 @@
         <module>tilde-services</module>
         <module>e-link</module>
         <module>publishing</module>
+        <module>dbpedia-spotlight</module>
     </modules>
     <parent>
         <groupId>eu.freme</groupId>
