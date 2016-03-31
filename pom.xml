@@ -19,8 +19,8 @@
     <dependencies>
         <dependency>
             <groupId>eu.freme</groupId>
-            <artifactId>common2</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <artifactId>common</artifactId>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>eu.freme.bservices</groupId>
