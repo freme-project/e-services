@@ -17,7 +17,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("/e-link")
+@RequestMapping("/e-link/templates")
 public class ManagingController extends OwnedResourceManagingController<Template> {
 
     Logger logger = Logger.getLogger(LinkingController.class);
