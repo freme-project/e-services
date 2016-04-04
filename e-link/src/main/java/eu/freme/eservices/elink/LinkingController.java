@@ -4,7 +4,9 @@ import com.google.common.base.Strings;
 import com.hp.hpl.jena.rdf.model.Model;
 import eu.freme.common.conversion.rdf.RDFConversionService;
 import eu.freme.common.exception.*;
+import eu.freme.common.persistence.dao.OwnedResourceDAO;
 import eu.freme.common.persistence.model.Template;
+import eu.freme.common.rest.BaseRestController;
 import eu.freme.common.rest.NIFParameterFactory;
 import eu.freme.common.rest.NIFParameterSet;
 import eu.freme.common.rest.OwnedResourceManagingController;
@@ -29,7 +31,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/e-link")
-public class LinkingController extends OwnedResourceManagingController<Template> {
+public class LinkingController extends BaseRestController{
 
     Logger logger = Logger.getLogger(LinkingController.class);
 
@@ -46,6 +48,9 @@ public class LinkingController extends OwnedResourceManagingController<Template>
 
     @Autowired
     NIFParameterFactory nifParameterFactory;
+
+    @Autowired
+    OwnedResourceDAO<Template> entityDAO;
 
     // Enriching using a template.
     // POST /e-link/enrich/
@@ -77,7 +82,7 @@ public class LinkingController extends OwnedResourceManagingController<Template>
 
             // templateDAO.findOneById(templateIdStr);
             // Check read access and retrieve the template
-            Template template = getEntityDAO().findOneByIdentifier(templateIdStr);
+            Template template = entityDAO.findOneByIdentifier(templateIdStr);
 
             HashMap<String, String> templateParams = new HashMap<>();
 
@@ -166,21 +171,5 @@ public class LinkingController extends OwnedResourceManagingController<Template>
         }
     }
 
-    @Override
-    protected Template createEntity(String body, Map<String, String> parameters, Map<String, String> headers) throws BadRequestException {
-        JSONObject jsonObj = new JSONObject(body);
-        templateValidator.validateTemplateEndpoint(jsonObj.getString("endpoint"));
 
-        // AccessDeniedException can be thrown, if current
-        // authentication is the anonymousUser
-        return new Template(jsonObj);
-    }
-
-    @Override
-    protected void updateEntity(Template template, String body, Map<String, String> parameters, Map<String, String> headers) throws BadRequestException {
-        if(!Strings.isNullOrEmpty(body) && !body.trim().isEmpty() && !body.trim().toLowerCase().equals("null") && !body.trim().toLowerCase().equals("empty")) {
-            JSONObject jsonObj = new JSONObject(body);
-            template.update(jsonObj);
-        }
-    }
 }
