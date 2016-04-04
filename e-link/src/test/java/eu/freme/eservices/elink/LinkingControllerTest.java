@@ -38,7 +38,7 @@ public class LinkingControllerTest {
         ApplicationContext context = IntegrationTestSetup.getContext("linking-controller-test-package.xml");
         ath = context.getBean(AuthenticatedTestHelper.class);
         vh = context.getBean(ValidationHelper.class);
-        ormh = new OwnedResourceManagingHelper<>(serviceUrl+"/templates",Template.class, ath);//, null);
+        ormh = new OwnedResourceManagingHelper<>("/e-link/templates",Template.class, ath);//, null);
         ath.authenticateUsers();
     }
 
