@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.freme.e-services</groupId>
     <artifactId>e-service-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>tilde-services</module>
@@ -13,7 +13,7 @@
     <parent>
         <groupId>eu.freme</groupId>
         <artifactId>freme-parent</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.2-SNAPSHOT</version>
     </parent>
 	
     <dependencies>
