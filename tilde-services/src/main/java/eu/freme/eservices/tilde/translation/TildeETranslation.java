@@ -133,8 +133,7 @@ public class TildeETranslation extends BaseRestController {
 
 			if (response.getStatus() != HttpStatus.OK.value()) {
 				throw new ExternalServiceFailedException(
-						"External service failed with status code "
-								+ response.getStatus(),
+						"External service failed: "+response.getBody(),
 						HttpStatus.valueOf(response.getStatus()));
 			}
 
