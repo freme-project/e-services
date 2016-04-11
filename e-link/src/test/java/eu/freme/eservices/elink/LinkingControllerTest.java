@@ -79,7 +79,7 @@ public class LinkingControllerTest {
         logger.info("start CRUD check");
         ormh.checkCRUDOperations(new SimpleEntityRequest(template1.toJson()), new SimpleEntityRequest(template2.toJson()), template1, template2, "9999");
     }
-    @Ignore
+
     @Test
     public void testExploreSparql() throws UnirestException, IOException {
         HttpResponse<String> response;
@@ -98,7 +98,7 @@ public class LinkingControllerTest {
         vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
 
     }
-    @Ignore
+
     @Test
     public void testExploreLdf() throws UnirestException, IOException {
 
