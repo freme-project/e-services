@@ -15,12 +15,12 @@
         <dependency>
             <groupId>eu.freme</groupId>
             <artifactId>common</artifactId>
-            <version>0.6</version>
+            <version>0.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>eu.freme.bservices</groupId>
             <artifactId>test-helper</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
