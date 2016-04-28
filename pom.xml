@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.freme.e-services</groupId>
     <artifactId>e-service-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <packaging>pom</packaging>
   
     <parent>
@@ -10,17 +10,24 @@
         <artifactId>freme-parent</artifactId>
         <version>0.2</version>
     </parent>
-	
+
+    <modules>
+        <module>tilde-services</module>
+        <module>dbpedia-spotlight</module>
+        <module>publishing</module>
+        <module>e-link</module>
+    </modules>
+
     <dependencies>
         <dependency>
             <groupId>eu.freme</groupId>
             <artifactId>common</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.61</version>
         </dependency>
         <dependency>
             <groupId>eu.freme.bservices</groupId>
             <artifactId>test-helper</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.21</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

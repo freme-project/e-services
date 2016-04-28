@@ -3,7 +3,7 @@
   <parent>
     <groupId>eu.freme.e-services</groupId>
     <artifactId>e-service-parent</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
   </parent>
   <artifactId>tilde-services</artifactId>
 </project>
