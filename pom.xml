@@ -15,7 +15,7 @@
         <module>tilde-services</module>
         <module>dbpedia-spotlight</module>
         <module>publishing</module>
-        <!--<module>e-link</module>-->
+        <module>e-link</module>
     </modules>
 
     <dependencies>
