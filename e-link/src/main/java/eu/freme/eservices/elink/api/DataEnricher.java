@@ -23,6 +23,8 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.*;
 import eu.freme.common.exception.BadRequestException;
+import eu.freme.common.exception.FREMEHttpException;
+import eu.freme.common.exception.InternalServerErrorException;
 import eu.freme.common.exception.UnsupportedEndpointType;
 import eu.freme.common.persistence.dao.TemplateDAO;
 import eu.freme.common.persistence.model.Template;
@@ -70,6 +72,9 @@ public class DataEnricher {
                 return enrichWithTemplateLDF(model, template, templateParams);                
             }
             return model;
+        } catch (FREMEHttpException ex) {
+            logger.error(getFullStackTrace(ex));
+            throw new BadRequestException(ex.getMessage());
         } catch (Exception ex) {
             logger.error(getFullStackTrace(ex));
             throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
@@ -83,27 +88,30 @@ public class DataEnricher {
      * @param templateParams Map of user defined parameters.
      */
     public Model enrichWithTemplateSPARQL(Model model, Template template, HashMap<String, String> templateParams) {
+        String endpoint=null;
+        String query = null;
         try {
-            StmtIterator ex = model.listStatements((Resource)null, model.getProperty("http://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode)null);
+            StmtIterator ex = model.listStatements((Resource) null, model.getProperty("http://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode) null);
 
             Model enrichment = ModelFactory.createDefaultModel();
-            
+
             // Iterating through every entity and enriching it.
-            while(ex.hasNext()) {
-                
+            while (ex.hasNext()) {
+
                 Statement stm = ex.nextStatement();
                 String entityURI = stm.getObject().asResource().getURI();
-                
+
                 // Replacing the entity_uri fields in the template with the entity URI.
-                String query = template.getQuery().replaceAll("@@@entity_uri@@@", entityURI);
+                query = template.getQuery().replaceAll("@@@entity_uri@@@", entityURI);
 
                 Map.Entry resModel;
                 // Replacing the other custom fields in the template with the corresponding values.
-                for(Iterator e = templateParams.entrySet().iterator(); e.hasNext(); query = query.replaceAll("@@@" + (String)resModel.getKey() + "@@@", (String)resModel.getValue())) {
-                    resModel = (Map.Entry)e.next();
+                for (Iterator e = templateParams.entrySet().iterator(); e.hasNext(); query = query.replaceAll("@@@" + (String) resModel.getKey() + "@@@", (String) resModel.getValue())) {
+                    resModel = (Map.Entry) e.next();
                 }
 
-                String endpoint = template.getEndpoint();
+
+                endpoint = template.getEndpoint();
 //                logger.error(endpoint);
 //                logger.error(query);
                 // Executing the enrichement.
@@ -113,12 +121,19 @@ public class DataEnricher {
                 e1.close();
                 Thread.sleep(400);
             }
-            
+
             model.add(enrichment);
             return model;
-        } catch (Exception ex) {
+
+        }catch(org.apache.jena.riot.RiotException ex){
+            logger.error(getFullStackTrace(ex));
+            throw new InternalServerErrorException("Could not process the enrichment result from the endpoint="+endpoint+" executing the query="+query+". Error message: "+ex.getMessage());
+        } catch (com.hp.hpl.jena.query.QueryParseException ex) {
             logger.error(getFullStackTrace(ex));
             throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
+        } catch (InterruptedException e) {
+            logger.error(getFullStackTrace(e));
+            throw new InternalServerErrorException("Failed to interrupt the thread for 400ms.");
         }
     }
 
