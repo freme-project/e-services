@@ -17,11 +17,12 @@
  */
 package eu.freme.eservices.elink.api;
 
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.rdf.model.*;
 import eu.freme.common.exception.BadRequestException;
 import eu.freme.common.exception.FREMEHttpException;
 import eu.freme.common.exception.InternalServerErrorException;
@@ -128,7 +129,7 @@ public class DataEnricher {
         }catch(org.apache.jena.riot.RiotException ex){
             logger.error(getFullStackTrace(ex));
             throw new InternalServerErrorException("Could not process the enrichment result from the endpoint="+endpoint+" executing the query="+query+". Error message: "+ex.getMessage());
-        } catch (com.hp.hpl.jena.query.QueryParseException ex) {
+        } catch (org.apache.jena.query.QueryParseException ex) {
             logger.error(getFullStackTrace(ex));
             throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
         } catch (InterruptedException e) {
@@ -166,7 +167,7 @@ public class DataEnricher {
                 // Executing the enrichement.
                 Model ldfModel;
                 LinkedDataFragmentGraph ldfg = new LinkedDataFragmentGraph(template.getEndpoint());
-                ldfModel = ModelFactory.createModelForGraph(ldfg);
+                ldfModel = ModelFactory.createModelForGraph((Graph) ldfg);
                 Query qry = QueryFactory.create(query);
                 QueryExecution qe = QueryExecutionFactory.create(qry, ldfModel);
                 Model enrichedModel = qe.execConstruct();
@@ -220,7 +221,7 @@ public class DataEnricher {
         try {
             Model model;
             LinkedDataFragmentGraph ldfg = new LinkedDataFragmentGraph(endpoint);
-            model = ModelFactory.createModelForGraph(ldfg);
+            model = ModelFactory.createModelForGraph((Graph) ldfg);
             String queryString = exploreQuery.replaceAll("@@@entity_uri@@@", resource);
             Query qry = QueryFactory.create(queryString);
             QueryExecution qe = QueryExecutionFactory.create(qry, model);

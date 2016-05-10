@@ -1,7 +1,7 @@
 package eu.freme.eservices.elink;
 
 import com.google.common.base.Strings;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 import eu.freme.common.conversion.rdf.RDFConversionService;
 import eu.freme.common.exception.*;
 import eu.freme.common.persistence.dao.OwnedResourceDAO;
