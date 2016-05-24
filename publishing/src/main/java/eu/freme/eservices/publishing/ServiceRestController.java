@@ -18,6 +18,7 @@
 package eu.freme.eservices.publishing;
 
 import com.google.gson.Gson;
+import eu.freme.common.conversion.SerializationFormatMapper;
 import eu.freme.eservices.publishing.exception.EPubCreationException;
 import eu.freme.eservices.publishing.exception.InvalidZipException;
 import eu.freme.eservices.publishing.exception.MissingMetadataException;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -46,6 +48,14 @@ public class ServiceRestController {
 
     @Autowired
     EPublishingService epubAPI;
+
+    @Autowired
+    SerializationFormatMapper serializationFormatMapper;
+
+    @PostConstruct
+    public void init(){
+        serializationFormatMapper.put("multipart/form-data", "multipart/form-data");
+    }
 
     @RequestMapping(value = "/e-publishing/html", method = RequestMethod.POST)
     public ResponseEntity<byte[]> htmlToEPub(@RequestParam("htmlZip") MultipartFile file, @RequestParam("metadata") String jMetadata) throws IOException, InvalidZipException, EPubCreationException, MissingMetadataException {
