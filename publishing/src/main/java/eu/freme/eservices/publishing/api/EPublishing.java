@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import eu.freme.common.conversion.SerializationFormatMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,8 @@ import eu.freme.eservices.publishing.exception.InvalidZipException;
 import eu.freme.eservices.publishing.exception.MissingMetadataException;
 import eu.freme.eservices.publishing.webservice.Metadata;
 
+import javax.annotation.PostConstruct;
+
 /**
  *
  * @author Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>
@@ -34,6 +37,15 @@ public class EPublishing {
 
     @Autowired
     EPublishingService entityAPI;
+
+    @Autowired
+    SerializationFormatMapper serializationFormatMapper;
+
+    @PostConstruct
+    public void init(){
+        serializationFormatMapper.put("multipart/form-data", "multipart/form-data");
+        System.out.println("INIT SerializationFormatMapper");
+    }
 
     @RequestMapping(value = "/e-publishing/html", method = RequestMethod.POST)
     public ResponseEntity<byte[]> htmlToEPub(@RequestParam("htmlZip") MultipartFile file, @RequestParam("metadata") String jMetadata) throws InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
