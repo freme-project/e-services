@@ -44,7 +44,7 @@ public class EPublishing {
     @PostConstruct
     public void init(){
         serializationFormatMapper.put("multipart/form-data", "multipart/form-data");
-        System.out.println("INIT SerializationFormatMapper");
+        serializationFormatMapper.put("application/epub+zip", "application/epub+zip");
     }
 
     @RequestMapping(value = "/e-publishing/html", method = RequestMethod.POST)
