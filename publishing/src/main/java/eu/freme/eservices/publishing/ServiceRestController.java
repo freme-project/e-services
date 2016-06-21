@@ -48,11 +48,16 @@ public class ServiceRestController {
     EPublishingService epubAPI;
 
     @RequestMapping(value = "/e-publishing/html", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> htmlToEPub(@RequestParam("htmlZip") MultipartFile file, @RequestParam("metadata") String jMetadata) throws IOException, InvalidZipException, EPubCreationException, MissingMetadataException {
+    public ResponseEntity<byte[]> htmlToEPub(
+            @RequestParam("htmlZip") MultipartFile file,
+            @RequestParam("metadata") String jMetadata
+    ) throws IOException, InvalidZipException, EPubCreationException, MissingMetadataException {
         Gson gson = new Gson();
         Metadata metadata = gson.fromJson(jMetadata, Metadata.class);
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "Application/epub+zip");
+        String filename = file.getName();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "Attachment; filename="+ filename.split("\\.")[0]+".epub");
         try (InputStream in = file.getInputStream()) {
             return new ResponseEntity<>(epubAPI.createEPUB(metadata, in), headers, HttpStatus.OK);
         }
