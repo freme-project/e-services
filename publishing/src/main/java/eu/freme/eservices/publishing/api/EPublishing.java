@@ -48,7 +48,10 @@ public class EPublishing {
     }
 
     @RequestMapping(value = "/e-publishing/html", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> htmlToEPub(@RequestParam("htmlZip") MultipartFile file, @RequestParam("metadata") String jMetadata) throws InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
+    public ResponseEntity<byte[]> htmlToEPub(
+            @RequestParam("htmlZip") MultipartFile file,
+            @RequestParam("metadata") String jMetadata
+    ) throws InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
 
         if (file.getSize() > maxUploadSize) {
             double size = maxUploadSize / (1024.0 * 1024);
@@ -60,8 +63,10 @@ public class EPublishing {
         Metadata metadata = gson.fromJson(jMetadata, Metadata.class);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/epub+zip");
+        String filename = file.getName();
+        responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "Attachment; filename="+ filename.split("\\.")[0]+".epub");
         try {
-            return new ResponseEntity<>(entityAPI.createEPUB(metadata, file.getInputStream()), HttpStatus.OK);
+            return new ResponseEntity<>(entityAPI.createEPUB(metadata, file.getInputStream()), responseHeaders, HttpStatus.OK);
         } catch (InvalidZipException | EPubCreationException | IOException | MissingMetadataException ex) {
             logger.log(Level.SEVERE, ex.getMessage());
             throw ex;
