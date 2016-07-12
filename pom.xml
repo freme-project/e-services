@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
     <groupId>eu.freme.e-services</groupId>
     <artifactId>e-service-parent</artifactId>
     <version>0.4-SNAPSHOT</version>
@@ -8,7 +9,7 @@
     <parent>
         <groupId>eu.freme</groupId>
         <artifactId>freme-parent</artifactId>
-        <version>0.2</version>
+        <version>0.3-SNAPSHOT</version>
     </parent>
 
     <modules>
@@ -17,20 +18,6 @@
         <module>publishing</module>
         <module>e-link</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>eu.freme</groupId>
-            <artifactId>common</artifactId>
-            <version>0.8-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.freme.bservices</groupId>
-            <artifactId>test-helper</artifactId>
-            <version>0.3-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
   
     <repositories>
         <repository>

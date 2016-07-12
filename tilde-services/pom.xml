@@ -1,10 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>eu.freme.e-services</groupId>
-    <artifactId>e-service-parent</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <groupId>eu.freme</groupId>
+    <artifactId>freme-parent</artifactId>
+    <version>0.3-SNAPSHOT</version>
   </parent>
   <version>0.4-SNAPSHOT</version> 
- <artifactId>tilde-services</artifactId>
+  <artifactId>tilde-services</artifactId>
+  <groupId>eu.freme.e-services</groupId>
+    <dependencies>
+        <dependency>
+            <groupId>eu.freme.bservices</groupId>
+            <artifactId>test-helper</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
