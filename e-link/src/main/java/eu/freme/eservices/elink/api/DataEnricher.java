@@ -22,13 +22,10 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.*;
-import eu.freme.common.exception.BadRequestException;
-import eu.freme.common.exception.FREMEHttpException;
-import eu.freme.common.exception.InternalServerErrorException;
-import eu.freme.common.exception.UnsupportedEndpointType;
-import eu.freme.common.persistence.dao.TemplateDAO;
+import eu.freme.common.exception.*;
 import eu.freme.common.persistence.model.Template;
 import eu.freme.common.persistence.model.Template.Type;
+import org.apache.jena.atlas.web.HttpException;
 import org.apache.log4j.Logger;
 import org.linkeddatafragments.model.LinkedDataFragmentGraph;
 import org.springframework.stereotype.Component;
@@ -75,7 +72,7 @@ public class DataEnricher {
         } catch (FREMEHttpException ex) {
             logger.error(getFullStackTrace(ex));
             throw new BadRequestException(ex.getMessage());
-        } catch (Exception ex) {
+        }  catch (Exception ex) {
             logger.error(getFullStackTrace(ex));
             throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
         }
@@ -134,6 +131,9 @@ public class DataEnricher {
         } catch (InterruptedException e) {
             logger.error(getFullStackTrace(e));
             throw new InternalServerErrorException("Failed to interrupt the thread for 400ms.");
+        }  catch (HttpException ex){
+            logger.error(getFullStackTrace(ex));
+            throw new ExternalServiceFailedException(ex.getMessage()+": The remote triple store could not be reached.");
         }
     }
 
@@ -163,7 +163,7 @@ public class DataEnricher {
                     resModel = (Map.Entry)e.next();
                 }
 
-                // Executing the enrichement.
+                // Executing the enrichment.
                 Model ldfModel;
                 LinkedDataFragmentGraph ldfg = new LinkedDataFragmentGraph(template.getEndpoint());
                 ldfModel = ModelFactory.createModelForGraph(ldfg);
@@ -175,9 +175,12 @@ public class DataEnricher {
             }
             model.add(enrichment);
             return model;
-        } catch (Exception ex) {
+        //} catch (Exception ex) {
+        //    logger.error(getFullStackTrace(ex));
+        //    throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
+        } catch (HttpException ex){
             logger.error(getFullStackTrace(ex));
-            throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
+            throw new ExternalServiceFailedException(ex.getMessage()+": The remote triple store could not be reached.");
         }
     }
 
@@ -188,7 +191,7 @@ public class DataEnricher {
      * @param endpoint     Endpoint URL.
      * @param endpointType Endpoint type.
      */
-    public Model exploreResource(String resource, String endpoint, String endpointType) throws BadRequestException {
+    public Model exploreResource(String resource, String endpoint, String endpointType) throws UnsupportedEndpointType, BadRequestException {
         
         if (endpointType == null) {
             return enrichViaSPARQL(resource, endpoint);
