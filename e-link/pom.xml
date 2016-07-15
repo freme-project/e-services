@@ -10,7 +10,7 @@
     </parent>
     
     <modelVersion>4.0.0</modelVersion>
-    <version>0.4</version>
+    <version>0.5-SNAPSHOT</version>
     <groupId>eu.freme.e-services</groupId>
     <artifactId>e-link</artifactId>
 

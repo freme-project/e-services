@@ -10,7 +10,7 @@
 	</parent>
   
 	<artifactId>publishing</artifactId>
-	<version>0.4</version>	
+	<version>0.5-SNAPSHOT</version>	
   <groupId>eu.freme.e-services</groupId>
   
 	<properties>
