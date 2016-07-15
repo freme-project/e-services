@@ -3,13 +3,13 @@
     
     <groupId>eu.freme.e-services</groupId>
     <artifactId>e-service-parent</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>pom</packaging>
   
     <parent>
         <groupId>eu.freme</groupId>
         <artifactId>freme-parent</artifactId>
-        <version>0.3-SNAPSHOT</version>
+        <version>0.8</version>
     </parent>
 
     <modules>

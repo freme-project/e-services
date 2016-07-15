@@ -3,9 +3,9 @@
   <parent>
     <groupId>eu.freme</groupId>
     <artifactId>freme-parent</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.8</version>
   </parent>
-  <version>0.4-SNAPSHOT</version> 
+  <version>0.4</version> 
   <artifactId>tilde-services</artifactId>
   <groupId>eu.freme.e-services</groupId>
     <dependencies>
@@ -13,6 +13,10 @@
             <groupId>eu.freme.bservices</groupId>
             <artifactId>test-helper</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.freme</groupId>
+            <artifactId>common</artifactId>
         </dependency>
     </dependencies>
 </project>

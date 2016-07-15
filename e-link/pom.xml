@@ -6,11 +6,11 @@
     <parent>
         <artifactId>freme-parent</artifactId>
         <groupId>eu.freme</groupId>
-        <version>0.3-SNAPSHOT</version>
+        <version>0.8</version>
     </parent>
     
     <modelVersion>4.0.0</modelVersion>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <groupId>eu.freme.e-services</groupId>
     <artifactId>e-link</artifactId>
 
@@ -30,6 +30,10 @@
             <groupId>eu.freme.bservices</groupId>
             <artifactId>test-helper</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.freme</groupId>
+            <artifactId>common</artifactId>
         </dependency>
     </dependencies>
 
