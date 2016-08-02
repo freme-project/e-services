@@ -112,22 +112,32 @@ public class DataEnricher {
 //                logger.error(endpoint);
 //       ///      logger.error(query);
                 // Executing the enrichement.
-                QueryExecution e1 = QueryExecutionFactory.sparqlService(endpoint, query);
-                Model resModel1 = e1.execConstruct();
-                enrichment.add(resModel1);
-                e1.close();
+                QueryExecution e1 = null;
+                try{
+                	e1 = QueryExecutionFactory.sparqlService(endpoint, query);
+                    Model resModel1 = e1.execConstruct();
+                    enrichment.add(resModel1);
+                    model.add(enrichment);
+                    e1.close();
+                    e1 = null;
+                }  catch(org.apache.jena.riot.RiotException exc){
+                    logger.error(getFullStackTrace(exc));
+                    throw new InternalServerErrorException("Could not process the enrichment result from the endpoint="+endpoint+" executing the query="+query+". Error message: "+exc.getMessage());
+                } catch (com.hp.hpl.jena.query.QueryParseException exc) {
+                    logger.error(getFullStackTrace(exc));
+                    throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
+                }  catch (HttpException exc){
+                    logger.error(getFullStackTrace(exc));
+                    throw new ExternalServiceFailedException(exc.getMessage()+": The remote triple store could not be reached.");
+                } finally{
+                	if( e1 != null ){
+                		e1.close();
+                	}
+                }
                 Thread.sleep(400);
             }
-
-            model.add(enrichment);
             return model;
 
-        }catch(org.apache.jena.riot.RiotException ex){
-            logger.error(getFullStackTrace(ex));
-            throw new InternalServerErrorException("Could not process the enrichment result from the endpoint="+endpoint+" executing the query="+query+". Error message: "+ex.getMessage());
-        } catch (com.hp.hpl.jena.query.QueryParseException ex) {
-            logger.error(getFullStackTrace(ex));
-            throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
         } catch (InterruptedException e) {
             logger.error(getFullStackTrace(e));
             throw new InternalServerErrorException("Failed to interrupt the thread for 400ms.");
