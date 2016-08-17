@@ -80,7 +80,7 @@ public class LinkingControllerTest {
         ormh.checkCRUDOperations(new SimpleEntityRequest(template1.toJson()), new SimpleEntityRequest(template2.toJson()), template1, template2, "9999");
     }
 
-    //@Test
+    @Test
     public void testExploreSparql() throws UnirestException, IOException {
         HttpResponse<String> response;
 
@@ -99,7 +99,7 @@ public class LinkingControllerTest {
 
     }
 
-    //@Test
+    @Test
     public void testExploreLdf() throws UnirestException, IOException {
 
         String rdf_resource = "http://dbpedia.org/resource/Berlin";
@@ -124,14 +124,14 @@ public class LinkingControllerTest {
 
         logger.info("create private template");
         Template privateTemplate = ormh.createEntity(
-                new SimpleEntityRequest(constructTemplate("Some label",  readFile("linking-sparql1.ttl"), null, "Some description", "sparql", "private").toJson()),
+                new SimpleEntityRequest(constructTemplate("Some label",  readFile("linking-sparql1.ttl"), "http://dbpedia.org/sparql/", "Some description", "sparql", "private").toJson()),
                 ath.getTokenWithPermission(),
                 HttpStatus.OK
         );
 
         logger.info("create public template");
         Template publicTemplate = ormh.createEntity(
-                new SimpleEntityRequest(constructTemplate("Some label", readFile("linking-sparql1.ttl"), null, "Some description", "sparql", "public").toJson()),
+                new SimpleEntityRequest(constructTemplate("Some label", readFile("linking-sparql1.ttl"), "http://dbpedia.org/sparql/", "Some description", "sparql", "public").toJson()),
                 ath.getTokenWithPermission(),
                 HttpStatus.OK
         );
