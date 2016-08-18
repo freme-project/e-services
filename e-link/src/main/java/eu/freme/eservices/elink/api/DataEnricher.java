@@ -87,8 +87,9 @@ public class DataEnricher {
     public Model enrichWithTemplateSPARQL(Model model, Template template, HashMap<String, String> templateParams) {
         String endpoint=null;
         String query = null;
+        StmtIterator ex = null;
         try {
-            StmtIterator ex = model.listStatements((Resource) null, model.getProperty("http://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode) null);
+            ex = model.listStatements((Resource) null, model.getProperty("http://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode) null);
 
             Model enrichment = ModelFactory.createDefaultModel();
 
@@ -141,9 +142,13 @@ public class DataEnricher {
         } catch (InterruptedException e) {
             logger.error(getFullStackTrace(e));
             throw new InternalServerErrorException("Failed to interrupt the thread for 400ms.");
-        }  catch (HttpException ex){
-            logger.error(getFullStackTrace(ex));
-            throw new ExternalServiceFailedException(ex.getMessage()+": The remote triple store could not be reached.");
+        }  catch (HttpException e){
+            logger.error(getFullStackTrace(e));
+            throw new ExternalServiceFailedException(e.getMessage()+": The remote triple store could not be reached.");
+        } finally {
+            if (ex != null) {
+                ex.close();
+            }
         }
     }
 
