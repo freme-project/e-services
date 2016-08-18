@@ -220,34 +220,42 @@ public class DataEnricher {
     }
 
     private Model enrichViaSPARQL(String resource, String endpoint) throws BadRequestException {
+        QueryExecution e1 = null;
         try {
             Model model = ModelFactory.createDefaultModel();
             String query = exploreQuery.replaceAll("@@@entity_uri@@@", resource);
-            QueryExecution e1 = QueryExecutionFactory.sparqlService(endpoint, query);
+            e1 = QueryExecutionFactory.sparqlService(endpoint, query);
             Model resModel1 = e1.execConstruct();
             model.add(resModel1);
-            e1.close();
             return model;
         } catch (Exception ex) {
             logger.error(getFullStackTrace(ex));
             throw new BadRequestException("Something went wrong when retrieving the content. Please contact the maintainers.");
+        } finally {
+            if (e1 != null) {
+                e1.close();
+            }
         }
     }
 
     private Model enrichViaLDFExplore(String resource, String endpoint) {
+        QueryExecution qe = null;
         try {
             Model model;
             LinkedDataFragmentGraph ldfg = new LinkedDataFragmentGraph(endpoint);
             model = ModelFactory.createModelForGraph(ldfg);
             String queryString = exploreQuery.replaceAll("@@@entity_uri@@@", resource);
             Query qry = QueryFactory.create(queryString);
-            QueryExecution qe = QueryExecutionFactory.create(qry, model);
+            qe = QueryExecutionFactory.create(qry, model);
             Model returnModel = qe.execConstruct();
-            qe.close();
             return returnModel;
         } catch (Exception ex) {
             logger.error(getFullStackTrace(ex));
             throw new BadRequestException("Something went wrong when retrieving the content. Please contact the maintainers.");
+        } finally {
+            if (qe != null) {
+                qe.close();
+            }
         }
     }
 
