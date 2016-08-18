@@ -88,10 +88,11 @@ public class DataEnricher {
         String endpoint=null;
         String query = null;
         StmtIterator ex = null;
+        Model enrichment = null;
         try {
             ex = model.listStatements((Resource) null, model.getProperty("http://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode) null);
 
-            Model enrichment = ModelFactory.createDefaultModel();
+            enrichment = ModelFactory.createDefaultModel();
 
             // Iterating through every entity and enriching it.
             while (ex.hasNext()) {
@@ -120,6 +121,7 @@ public class DataEnricher {
                     enrichment.add(resModel1);
                     model.add(enrichment);
                     e1.close();
+                    resModel1.close();
                     e1 = null;
                 }  catch(org.apache.jena.riot.RiotException exc){
                     logger.error(getFullStackTrace(exc));
@@ -148,6 +150,9 @@ public class DataEnricher {
         } finally {
             if (ex != null) {
                 ex.close();
+            }
+            if (enrichment != null) {
+                enrichment.close();
             }
         }
     }
