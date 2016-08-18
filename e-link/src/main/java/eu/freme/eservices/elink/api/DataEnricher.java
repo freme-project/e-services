@@ -154,8 +154,9 @@ public class DataEnricher {
      * @param templateParams Map of user defined parameters.
      */
     public Model enrichWithTemplateLDF(Model model, Template template, HashMap<String, String> templateParams) {
+        StmtIterator ex = null;
         try {
-            StmtIterator ex = model.listStatements((Resource)null, model.getProperty("http://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode)null);
+            ex = model.listStatements((Resource)null, model.getProperty("http://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode)null);
 
             Model enrichment = ModelFactory.createDefaultModel();
 
@@ -188,9 +189,13 @@ public class DataEnricher {
         //} catch (Exception ex) {
         //    logger.error(getFullStackTrace(ex));
         //    throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
-        } catch (HttpException ex){
-            logger.error(getFullStackTrace(ex));
-            throw new ExternalServiceFailedException(ex.getMessage()+": The remote triple store could not be reached.");
+        } catch (HttpException e){
+            logger.error(getFullStackTrace(e));
+            throw new ExternalServiceFailedException(e.getMessage()+": The remote triple store could not be reached.");
+        } finally {
+            if (ex != null) {
+                ex.close();
+            }
         }
     }
 
