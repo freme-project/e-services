@@ -8,7 +8,7 @@
     </parent>
     
     <modelVersion>4.0.0</modelVersion>
-    <version>0.5</version>
+    <version>0.6-SNAPSHOT</version>
     <groupId>eu.freme.e-services</groupId>
     <artifactId>e-link</artifactId>
 
