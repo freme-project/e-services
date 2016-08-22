@@ -3,7 +3,7 @@
     
     <groupId>eu.freme.e-services</groupId>
     <artifactId>e-service-parent</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.9</version>
     <packaging>pom</packaging>
   
     <parent>
@@ -37,4 +37,8 @@
             </releases>
         </repository>
     </repositories>
+
+  <scm>
+    <tag>e-service-parent-0.9</tag>
+  </scm>
 </project>
