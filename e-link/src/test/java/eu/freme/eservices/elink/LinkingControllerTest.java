@@ -1,26 +1,32 @@
 package eu.freme.eservices.elink;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import eu.freme.bservices.testhelper.*;
-import eu.freme.bservices.testhelper.api.IntegrationTestSetup;
-import eu.freme.common.conversion.rdf.RDFConstants;
-import eu.freme.common.persistence.model.OwnedResource;
-import eu.freme.common.persistence.model.Template;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 
-import java.io.File;
-import java.io.IOException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
-import static org.junit.Assert.assertEquals;
+import eu.freme.bservices.testhelper.AuthenticatedTestHelper;
+import eu.freme.bservices.testhelper.LoggingHelper;
+import eu.freme.bservices.testhelper.OwnedResourceManagingHelper;
+import eu.freme.bservices.testhelper.SimpleEntityRequest;
+import eu.freme.bservices.testhelper.ValidationHelper;
+import eu.freme.bservices.testhelper.api.IntegrationTestSetup;
+import eu.freme.common.conversion.rdf.RDFConstants;
+import eu.freme.common.persistence.model.OwnedResource;
+import eu.freme.common.persistence.model.Template;
 /**
  * Created by Arne Binder (arne.b.binder@gmail.com) on 27.01.2016.
  */
@@ -122,16 +128,19 @@ public class LinkingControllerTest {
 
         logger.info("testLinkingDocuments");
 
+        //String endpoint = "http://dbpedia.org/sparql/";
+        String endpoint = null;
         logger.info("create private template");
         Template privateTemplate = ormh.createEntity(
-                new SimpleEntityRequest(constructTemplate("Some label",  readFile("linking-sparql1.ttl"), "http://dbpedia.org/sparql/", "Some description", "sparql", "private").toJson()),
+                new SimpleEntityRequest(constructTemplate("Some label",  readFile("linking-sparql1.ttl"), endpoint, "Some description", "sparql", "private").toJson()),
                 ath.getTokenWithPermission(),
                 HttpStatus.OK
         );
 
         logger.info("create public template");
+        
         Template publicTemplate = ormh.createEntity(
-                new SimpleEntityRequest(constructTemplate("Some label", readFile("linking-sparql1.ttl"), "http://dbpedia.org/sparql/", "Some description", "sparql", "public").toJson()),
+                new SimpleEntityRequest(constructTemplate("Some label", readFile("linking-sparql1.ttl"), endpoint , "Some description", "sparql", "public").toJson()),
                 ath.getTokenWithPermission(),
                 HttpStatus.OK
         );
@@ -141,14 +150,21 @@ public class LinkingControllerTest {
         try {
             logger.info("try to enrich via private template as other user... should not work");
             LoggingHelper.loggerIgnore(LoggingHelper.accessDeniedExceptions);
-            assertEquals(HttpStatus.UNAUTHORIZED.value(), doLinking(nifContent, privateTemplate.getIdentifier(), ath.getTokenWithoutPermission()));
+            assertEquals(HttpStatus.UNAUTHORIZED.value(), doLinking(nifContent, privateTemplate.getIdentifier(), ath.getTokenWithoutPermission(), new ArrayList<String>()));
             LoggingHelper.loggerUnignore(LoggingHelper.accessDeniedExceptions);
+
             logger.info("try to enrich via private template as template owner... should work");
-            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, privateTemplate.getIdentifier(), ath.getTokenWithPermission()));
+            ArrayList<String> response = new ArrayList<String>();
+            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, privateTemplate.getIdentifier(), ath.getTokenWithPermission(),response));
+            logger.info("check if the response contains the expected enrichment information that is obtained from applying the template");
+            assertTrue(response.get(0).contains("http://dbpedia.org/resource/Museum_of_Asian_Art")&&
+         		   	   response.get(0).contains("http://dbpedia.org/resource/Keramik-Museum_Berlin"));
+            
             logger.info("try to enrich via public template as other user... should work");
-            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), ath.getTokenWithoutPermission()));
+            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), ath.getTokenWithoutPermission(), new ArrayList<String>()));
+            
             logger.info("try to enrich via public template as template owner... should work");
-            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), ath.getTokenWithPermission()));
+            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), ath.getTokenWithPermission(), new ArrayList<String>()));
         } finally {
             logger.info("delete private template");
             ormh.deleteEntity(privateTemplate.getIdentifier(),ath.getTokenWithPermission(),HttpStatus.OK);
@@ -170,7 +186,7 @@ public class LinkingControllerTest {
         return template;
     }
 
-    private int doLinking(String nifContent, String templateId, String token) throws UnirestException, IOException {
+    private int doLinking(String nifContent, String templateId, String token, ArrayList<String> requestResponse) throws UnirestException, IOException {
         HttpResponse<String> response = ath.addAuthentication(Unirest.post(ath.getAPIBaseUrl()+serviceUrl+"/documents"), token)
                 .queryString(LinkingController.templateIdentiferName, templateId)
                 .queryString("informat", "turtle")
@@ -180,6 +196,9 @@ public class LinkingControllerTest {
         if(response.getStatus()==HttpStatus.OK.value()) {
             vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
         }
+        
+        //make body of response accessible
+        requestResponse.add(response.getBody());
         return response.getStatus();
     }
 
