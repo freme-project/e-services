@@ -39,6 +39,7 @@ import eu.freme.common.conversion.rdf.RDFConstants;
 import eu.freme.common.conversion.rdf.RDFConstants.RDFSerialization;
 import eu.freme.common.exception.BadRequestException;
 import eu.freme.common.exception.ExternalServiceFailedException;
+import eu.freme.common.exception.NIFVersionNotSupportedException;
 import eu.freme.common.rest.BaseRestController;
 import eu.freme.common.rest.NIFParameterSet;
 
@@ -55,7 +56,8 @@ public class TildeETranslation extends BaseRestController {
 	TranslationConversionService translationConversionService;
 
 	@Value("${freme.broker.tildeETranslationUrl:https://services.tilde.com/translation/?sourceLang={source-lang}&targetLang={target-lang}}")
-	private String endpoint;// = "https://services.tilde.com/translation/?sourceLang={source-lang}&targetLang={target-lang}";
+	private String endpoint;// =
+							// "https://services.tilde.com/translation/?sourceLang={source-lang}&targetLang={target-lang}";
 
 	@RequestMapping(value = "/e-translation/tilde", method = RequestMethod.POST)
 	public ResponseEntity<String> tildeTranslate(
@@ -74,8 +76,8 @@ public class TildeETranslation extends BaseRestController {
 			@RequestParam(value = "target-lang") String targetLang,
 			@RequestParam(value = "domain", defaultValue = "") String domain,
 			@RequestParam(value = "system", defaultValue = "full") String system,
-			@RequestParam(value = "key", required= false) String key
-	) {
+			@RequestParam(value = "key", required = false) String key,
+			@RequestParam(value = "nif-version", required = false) String nifVersion) {
 
 		// merge long and short parameters - long parameters override short
 		// parameters
@@ -90,6 +92,13 @@ public class TildeETranslation extends BaseRestController {
 		}
 		if (prefix == null) {
 			prefix = p;
+		}
+
+		if (nifVersion != null
+				&& !(nifVersion.equals(RDFConstants.nifVersion2_0))
+				|| nifVersion.equals(RDFConstants.nifVersion2_1)) {
+			throw new NIFVersionNotSupportedException("NIF version \""
+					+ nifVersion + "\" is not supported");
 		}
 		NIFParameterSet parameters = this.normalizeNif(input, informat,
 				outformat, postBody, acceptHeader, contentTypeHeader, prefix);
@@ -112,7 +121,7 @@ public class TildeETranslation extends BaseRestController {
 			// input is plaintext
 			plaintext = parameters.getInput();
 			getRdfConversionService().plaintextToRDF(inputModel, plaintext,
-					sourceLang, parameters.getPrefix());
+					sourceLang, parameters.getPrefix(), nifVersion);
 		}
 
 		// send request to tilde mt
@@ -125,7 +134,8 @@ public class TildeETranslation extends BaseRestController {
 					.header("Accept", "application/x-turtle")
 					.header("Content-Type", "application/x-turtle")
 					.queryString("system", system)
-					.header("Authentication", "Basic RlJFTUU6dXxGcjNtM19zJGN1ciQ=")
+					.header("Authentication",
+							"Basic RlJFTUU6dXxGcjNtM19zJGN1ciQ=")
 					.queryString("domain", domain)
 					.queryString("key", key)
 					.body(getRdfConversionService().serializeRDF(inputModel,
@@ -133,14 +143,14 @@ public class TildeETranslation extends BaseRestController {
 
 			if (response.getStatus() != HttpStatus.OK.value()) {
 				throw new ExternalServiceFailedException(
-						"External service failed: "+response.getBody(),
+						"External service failed: " + response.getBody(),
 						HttpStatus.valueOf(response.getStatus()));
 			}
 
 			String translation = response.getBody();
 
-			responseModel = getRdfConversionService().unserializeRDF(translation,
-					RDFSerialization.TURTLE);
+			responseModel = getRdfConversionService().unserializeRDF(
+					translation, RDFSerialization.TURTLE);
 
 		} catch (Exception e) {
 			if (e instanceof ExternalServiceFailedException) {

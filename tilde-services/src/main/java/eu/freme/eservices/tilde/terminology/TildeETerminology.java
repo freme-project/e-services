@@ -39,6 +39,7 @@ import eu.freme.common.conversion.rdf.RDFConstants;
 import eu.freme.common.conversion.rdf.RDFConstants.RDFSerialization;
 import eu.freme.common.exception.BadRequestException;
 import eu.freme.common.exception.ExternalServiceFailedException;
+import eu.freme.common.exception.NIFVersionNotSupportedException;
 import eu.freme.common.rest.BaseRestController;
 import eu.freme.common.rest.NIFParameterSet;
 
@@ -77,7 +78,8 @@ public class TildeETerminology extends BaseRestController {
 			@RequestParam(value = "domain", defaultValue = "") String domain,
 			@RequestParam(value = "mode", defaultValue = "full") String mode,
 			@RequestParam(value = "collection", required = false) String collection,
-			@RequestHeader(value = "key", required= false) String key
+			@RequestHeader(value = "key", required= false) String key,
+			@RequestParam(value = "nif-version", required = false) String nifVersion
 	) {
 		// merge long and short parameters - long parameters override short
 		// parameters
@@ -94,7 +96,13 @@ public class TildeETerminology extends BaseRestController {
 			prefix = p;
 		}
 		
-
+		if (nifVersion != null
+				&& !(nifVersion.equals(RDFConstants.nifVersion2_0))
+				|| nifVersion.equals(RDFConstants.nifVersion2_1)) {
+			throw new NIFVersionNotSupportedException("NIF version \""
+					+ nifVersion + "\" is not supported");
+		}
+		
 		NIFParameterSet parameters = this.normalizeNif(input, informat,
 				outformat, postBody, acceptHeader, contentTypeHeader, prefix);
 
@@ -116,7 +124,7 @@ public class TildeETerminology extends BaseRestController {
 			// input is plaintext
 			plaintext = parameters.getInput();
 			getRdfConversionService().plaintextToRDF(inputModel, plaintext,
-					sourceLang, parameters.getPrefix());
+					sourceLang, parameters.getPrefix(), nifVersion);
 
 		}
 
