@@ -95,8 +95,8 @@ public class TildeETranslation extends BaseRestController {
 		}
 
 		if (nifVersion != null
-				&& !(nifVersion.equals(RDFConstants.nifVersion2_0))
-				|| nifVersion.equals(RDFConstants.nifVersion2_1)) {
+				&& !(nifVersion.equals(RDFConstants.nifVersion2_0)
+				|| nifVersion.equals(RDFConstants.nifVersion2_1))) {
 			throw new NIFVersionNotSupportedException("NIF version \""
 					+ nifVersion + "\" is not supported");
 		}
