@@ -146,6 +146,7 @@ public class TildeETerminology extends BaseRestController {
 					.queryString("collection", collection)
 					.header("Authentication", "Basic RlJFTUU6dXxGcjNtM19zJGN1ciQ=")
 					.queryString("key", key)
+					.queryString("nif-version", nifVersion)
 					.body(getRdfConversionService().serializeRDF(inputModel,
 					RDFSerialization.TURTLE)).asString();
 					
