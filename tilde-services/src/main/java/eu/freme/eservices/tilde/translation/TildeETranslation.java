@@ -138,6 +138,7 @@ public class TildeETranslation extends BaseRestController {
 							"Basic RlJFTUU6dXxGcjNtM19zJGN1ciQ=")
 					.queryString("domain", domain)
 					.queryString("key", key)
+					.queryString("nif-version", nifVersion)
 					.body(getRdfConversionService().serializeRDF(inputModel,
 							RDFSerialization.TURTLE)).asString();
 
