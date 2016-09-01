@@ -80,11 +80,14 @@ public class DBpediaSpotlight extends BaseRestController {
             @RequestParam(value = "confidence", required = false) String confidenceParam,
             @RequestParam Map<String, String> allParams,
             @RequestBody(required = false) String postBody) {
+        Model inModel = null;
+        Model outModel = null;
+        StmtIterator iter = null;
         try {
             NIFParameterSet nifParameters = this.normalizeNif(postBody, acceptHeader, contentTypeHeader, allParams, false);
 
-            Model inModel = ModelFactory.createDefaultModel();
-            Model outModel = ModelFactory.createDefaultModel();
+            inModel = ModelFactory.createDefaultModel();
+            outModel = ModelFactory.createDefaultModel();
 
             // Check the language parameter.
             if (!languageParam.equals("en")) {
@@ -101,7 +104,7 @@ public class DBpediaSpotlight extends BaseRestController {
 
                 inModel = rdfConversionService.unserializeRDF(nifParameters.getInput(), nifParameters.getInformat());
 
-                StmtIterator iter = inModel.listStatements(null, RDF.type, inModel.getResource("http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context"));
+                iter = inModel.listStatements(null, RDF.type, inModel.getResource("http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context"));
 
                 boolean textFound = false;
                 String tmpPrefix = "http://freme-project.eu/#";
@@ -151,6 +154,16 @@ public class DBpediaSpotlight extends BaseRestController {
         } catch (Exception e) {
             logger.error("failed", e);
             throw new eu.freme.common.exception.BadRequestException(e.getMessage());
+        } finally {
+            if (inModel != null) {
+                inModel.close();
+            }
+            if (outModel != null) {
+                outModel.close();
+            }
+            if (iter != null) {
+                iter.close();
+            }
         }
     }
     public String callDBpediaSpotlight(String text, String confidenceParam, String languageParam, String prefix) throws ExternalServiceFailedException, BadRequestException {
