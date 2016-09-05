@@ -78,7 +78,7 @@ public class TildeETerminology extends BaseRestController {
 			@RequestParam(value = "domain", defaultValue = "") String domain,
 			@RequestParam(value = "mode", defaultValue = "full") String mode,
 			@RequestParam(value = "collection", required = false) String collection,
-			@RequestHeader(value = "key", required= false) String key,
+			@RequestParam(value = "key", required= false) String key,
 			@RequestParam(value = "nif-version", required = false) String nifVersion
 	) {
 		// merge long and short parameters - long parameters override short
