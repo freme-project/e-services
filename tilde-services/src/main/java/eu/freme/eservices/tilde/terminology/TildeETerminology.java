@@ -17,6 +17,9 @@
  */
 package eu.freme.eservices.tilde.terminology;
 
+import eu.freme.common.conversion.SerializationFormatMapper;
+import eu.freme.common.conversion.rdf.RDFConversionService;
+import eu.freme.common.rest.RestHelper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +45,8 @@ import eu.freme.common.exception.ExternalServiceFailedException;
 import eu.freme.common.exception.NIFVersionNotSupportedException;
 import eu.freme.common.rest.BaseRestController;
 import eu.freme.common.rest.NIFParameterSet;
+
+import static eu.freme.common.conversion.rdf.RDFConstants.TURTLE;
 
 /**
  * REST controller for Tilde e-Translation service
@@ -103,19 +108,18 @@ public class TildeETerminology extends BaseRestController {
 					+ nifVersion + "\" is not supported");
 		}
 		
-		NIFParameterSet parameters = this.normalizeNif(input, informat,
+		NIFParameterSet parameters = normalizeNif(input, informat,
 				outformat, postBody, acceptHeader, contentTypeHeader, prefix);
 
 		// create rdf model
 		String plaintext = null;
 		Model inputModel = ModelFactory.createDefaultModel();
 
-		if (!parameters.getInformat().equals(
-				RDFConstants.RDFSerialization.PLAINTEXT)) {
+		if (!parameters.getInformatString().equals(SerializationFormatMapper.PLAINTEXT)) {
 			// input is nif
 			try {
-				inputModel = this.unserializeNif(parameters.getInput(),
-						parameters.getInformat());
+				inputModel = unserializeRDF(parameters.getInput(),
+						parameters.getInformatString());
 			} catch (Exception e) {
 				logger.error("failed", e);
 				throw new BadRequestException("Error parsing NIF input");
@@ -131,11 +135,6 @@ public class TildeETerminology extends BaseRestController {
 		// send request to tilde mt
 		Model responseModel = null;
 		try {
-//			String nifString = rdfConversionService.serializeRDF(inputModel,
-//					RDFSerialization.TURTLE);
-//			if( logger.isDebugEnabled() ){
-//				logger.debug( "send nif to tilde e-terminology: \n" + nifString);
-//			}
 			HttpResponse<String> response = Unirest.post(endpoint)
 					.queryString("sourceLang", sourceLang)
 					.queryString("targetLang", targetLang)
@@ -147,21 +146,8 @@ public class TildeETerminology extends BaseRestController {
 					.header("Authentication", "Basic RlJFTUU6dXxGcjNtM19zJGN1ciQ=")
 					.queryString("key", key)
 					.queryString("nif-version", nifVersion)
-					.body(getRdfConversionService().serializeRDF(inputModel,
-					RDFSerialization.TURTLE)).asString();
-					
-//			HttpResponse<String> response = Unirest
-//					.post(endpoint)
-//					.routeParam("source-lang", sourceLang)
-//					.routeParam("target-lang", targetLang)
-//					.header("Accept", "application/x-turtle")
-//					.header("Content-Type", "application/x-turtle")
-//					.queryString("system", system)
-//					.header("Authentication", "Basic RlJFTUU6dXxGcjNtM19zJGN1ciQ=")
-//					.queryString("domain", domain)
-//					.queryString("key", key)
-//					.body(getRdfConversionService().serializeRDF(inputModel,
-//							RDFSerialization.TURTLE)).asString();
+					.body(serializeRDF(inputModel, TURTLE)).asString();
+
 
 			if (response.getStatus() != HttpStatus.OK.value()) {
 				throw new ExternalServiceFailedException(
@@ -172,8 +158,7 @@ public class TildeETerminology extends BaseRestController {
 
 			String translation = response.getBody();
 
-			responseModel = getRdfConversionService().unserializeRDF(translation,
-					RDFSerialization.TURTLE);
+			responseModel = unserializeRDF(translation, TURTLE);
 			
 		} catch (Exception e) {
 			if (e instanceof ExternalServiceFailedException) {
@@ -185,7 +170,7 @@ public class TildeETerminology extends BaseRestController {
 			}
 		}
 		
-		return createSuccessResponse(responseModel, parameters.getOutformat());
+		return createSuccessResponse(responseModel, parameters.getOutformatString());
 
 
 	}

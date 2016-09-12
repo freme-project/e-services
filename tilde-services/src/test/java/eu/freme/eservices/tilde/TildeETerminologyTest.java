@@ -17,6 +17,7 @@
  */
 package eu.freme.eservices.tilde;
 
+import static eu.freme.common.conversion.rdf.RDFConstants.TURTLE;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -72,14 +73,13 @@ public class TildeETerminologyTest {
 				.queryString("input", "Show me the source of the light.")
 				.queryString("outformat", "turtle").asString();
 
-		validationHelper.validateNIFResponse(response,
-				RDFConstants.RDFSerialization.TURTLE);
+		validationHelper.validateNIFResponse(response, TURTLE);
 
 		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-terminology/showmethesourceofthelight.ttl"));
 //		String mockup-endpoint-data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/mockup-endpoint-data.turtle"));
 		response = baseRequest().header("Content-Type", "text/turtle")
 				.body(data).asString();
-		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+		validationHelper.validateNIFResponse(response, TURTLE);
 
 		assertTrue(response.getStatus() == 200);
 		assertTrue(response.getBody().length() > 0);
@@ -87,7 +87,7 @@ public class TildeETerminologyTest {
 		response = baseRequest()
 				.queryString("informat", "text").queryString("outformat", "turtle").body("Show me the source of the light.")
 				.asString();
-		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+		validationHelper.validateNIFResponse(response, TURTLE);
 
 		assertTrue(response.getStatus() == 200);
 		assertTrue(response.getBody().length() > 0);

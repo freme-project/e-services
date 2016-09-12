@@ -1,5 +1,6 @@
 package eu.freme.eservices.elink;
 
+import static eu.freme.common.conversion.rdf.RDFConstants.TURTLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -101,7 +102,7 @@ public class LinkingControllerTest {
                 .queryString("endpoint", endpoint)
                 .asString();
 
-        vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+        vh.validateNIFResponse(response, TURTLE);
 
     }
 
@@ -120,7 +121,7 @@ public class LinkingControllerTest {
                 .asString();
 
 
-        vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+        vh.validateNIFResponse(response, TURTLE);
     }
 
     @Test
@@ -194,7 +195,7 @@ public class LinkingControllerTest {
                 .body(nifContent)
                 .asString();
         if(response.getStatus()==HttpStatus.OK.value()) {
-            vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+            vh.validateNIFResponse(response, TURTLE);
         }
         
         //make body of response accessible

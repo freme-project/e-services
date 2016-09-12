@@ -17,6 +17,7 @@
  */
 package eu.freme.eservices.tilde;
 
+import static eu.freme.common.conversion.rdf.RDFConstants.*;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -72,13 +73,12 @@ public class TildeETranslationTest {
 				.queryString("input", "Show me the source of the light.")
 				.queryString("outformat", "rdf-xml").asString();
 
-		validationHelper.validateNIFResponse(response,
-				RDFConstants.RDFSerialization.RDF_XML);
+		validationHelper.validateNIFResponse(response, RDF_XML);
 
 		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/showmethesourceofthelight.ttl"));
 		response = baseRequest().header("Content-Type", "text/turtle")
 				.body(data).asString();
-		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+		validationHelper.validateNIFResponse(response, TURTLE);
 
 		assertTrue(response.getStatus() == 200);
 		assertTrue(response.getBody().length() > 0);
@@ -88,19 +88,19 @@ public class TildeETranslationTest {
 				.queryString("outformat", "json-ld").body(data).asString();
 		assertTrue(response.getStatus() == 200);
 		assertTrue(response.getBody().length() > 0);
-		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.JSON_LD);
+		validationHelper.validateNIFResponse(response, JSON_LD);
 
 		data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/showmethesourceofthelight.txt"));
 		response = baseRequest()
 				.queryString("input", URLEncoder.encode(data, "UTF-8"))
 				.queryString("informat", "text").queryString("outformat", "n3")
 				.asString();
-		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.N3);
+		validationHelper.validateNIFResponse(response, N3);
 
 		response = baseRequest()
 				.queryString("input", URLEncoder.encode(data, "UTF-8"))
 				.queryString("informat", "text")
 				.queryString("outformat", "n-triples").asString();
-		validationHelper.validateNIFResponse(response, RDFConstants.RDFSerialization.N_TRIPLES);
+		validationHelper.validateNIFResponse(response, N_TRIPLES);
 	}
 }

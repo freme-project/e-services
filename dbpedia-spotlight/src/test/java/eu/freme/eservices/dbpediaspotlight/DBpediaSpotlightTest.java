@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import static eu.freme.common.conversion.rdf.RDFConstants.TURTLE;
 import static org.junit.Assert.assertEquals;
 /**
  * Created by Arne Binder (arne.b.binder@gmail.com) on 27.01.2016.
@@ -63,7 +64,7 @@ public class DBpediaSpotlightTest {
                     .queryString("language", lang)
                     .queryString("informat", "text")
                     .asString();
-            vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+            vh.validateNIFResponse(response, TURTLE);
 
             //Tests POST
             //Plaintext Input in Body
@@ -73,14 +74,14 @@ public class DBpediaSpotlightTest {
                     .header("Content-Type", "text/plain")
                     .body(testinput)
                     .asString();
-            vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+            vh.validateNIFResponse(response, TURTLE);
             //Tests POST
             //NIF Input in Body (Turtle)
             logger.info("Testing Turtle Input in Body");
             response = Unirest.post(th.getAPIBaseUrl() + serviceUrl+  "documents").header("Content-Type", "text/turtle")
                     .queryString("language", lang)
                     .body(data).asString();
-            vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+            vh.validateNIFResponse(response, TURTLE);
 
 
             //Tests POST
@@ -93,7 +94,7 @@ public class DBpediaSpotlightTest {
                     .queryString("confidence","0.2")
                     .queryString("prefix", "http://test-prefix.com/")
                     .asString();
-            vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+            vh.validateNIFResponse(response, TURTLE);
 
             //assertTrue(response.getString() contains prefix)
 
@@ -104,7 +105,7 @@ public class DBpediaSpotlightTest {
                     .queryString("input", testinputEncoded)
                     .queryString("language", lang)
                     .asString();
-            vh.validateNIFResponse(response, RDFConstants.RDFSerialization.TURTLE);
+            vh.validateNIFResponse(response, TURTLE);
         }
     }
 

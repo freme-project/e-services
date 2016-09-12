@@ -25,11 +25,13 @@ import java.util.Map;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import eu.freme.common.conversion.SerializationFormatMapper;
 import eu.freme.common.conversion.rdf.RDFConversionService;
 import eu.freme.common.exception.BadRequestException;
 import eu.freme.common.exception.ExternalServiceFailedException;
 import eu.freme.common.rest.BaseRestController;
 import eu.freme.common.rest.NIFParameterSet;
+import eu.freme.common.rest.RestHelper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,10 +65,6 @@ public class DBpediaSpotlight extends BaseRestController {
     @Value("${freme.eentity.dbpediaSpotlightEndpointUrl:http://spotlight.nlp2rdf.aksw.org/spotlight}")
     String dbpediaSpotlightUrl;
 
-    @Autowired
-    RDFConversionService rdfConversionService;
-
-
     @RequestMapping(value = "/e-entity/dbpedia-spotlight/documents", method = {
             RequestMethod.POST, RequestMethod.GET})
     public ResponseEntity<String> execute(
@@ -80,7 +78,7 @@ public class DBpediaSpotlight extends BaseRestController {
         Model outModel = null;
         StmtIterator iter = null;
         try {
-            NIFParameterSet nifParameters = this.normalizeNif(postBody, acceptHeader, contentTypeHeader, allParams, false);
+            NIFParameterSet nifParameters = normalizeNif(postBody, acceptHeader, contentTypeHeader, allParams, false);
 
             inModel = ModelFactory.createDefaultModel();
             outModel = ModelFactory.createDefaultModel();
@@ -93,12 +91,12 @@ public class DBpediaSpotlight extends BaseRestController {
 
             String textForProcessing = null;
 
-            if (nifParameters.getInformat().equals(RDFConstants.RDFSerialization.PLAINTEXT)) {
+            if (nifParameters.getInformatString().equals(SerializationFormatMapper.PLAINTEXT)) {
                 // input is sent as value of the input parameter
                 textForProcessing = nifParameters.getInput();
             } else {
 
-                inModel = rdfConversionService.unserializeRDF(nifParameters.getInput(), nifParameters.getInformat());
+                inModel = unserializeRDF(nifParameters.getInput(), nifParameters.getInformat());
 
                 iter = inModel.listStatements(null, RDF.type, inModel.getResource(nifPrefix+NIF_CONTEXT_TYPE));
 
@@ -139,7 +137,7 @@ public class DBpediaSpotlight extends BaseRestController {
                 Resource res = resIter.next();
                 outModel.removeAll(res, null, (RDFNode) null);
             }
-            return createSuccessResponse(outModel, nifParameters.getOutformat());
+            return createSuccessResponse(outModel, nifParameters.getOutformatString());
 
         } catch (BadRequestException e) {
             logger.error("failed", e);

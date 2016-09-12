@@ -17,6 +17,9 @@
  */
 package eu.freme.eservices.tilde.translation;
 
+import eu.freme.common.conversion.SerializationFormatMapper;
+import eu.freme.common.conversion.rdf.RDFConversionService;
+import eu.freme.common.rest.RestHelper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,8 +55,15 @@ import eu.freme.common.rest.NIFParameterSet;
 public class TildeETranslation extends BaseRestController {
 
 	Logger logger = Logger.getLogger(TildeETranslation.class);
+
 	@Autowired
 	TranslationConversionService translationConversionService;
+
+	@Autowired
+	RDFConversionService rdfConversionService;
+
+	@Autowired
+	RestHelper restHelper;
 	
 		//live version: https://services.tilde.com/translation/
 	@Value("${freme.broker.tildeETranslationUrl:https://services.tilde.com/dev/translation?sourceLang={source-lang}&targetLang={target-lang}}")
@@ -99,18 +109,17 @@ public class TildeETranslation extends BaseRestController {
 			throw new NIFVersionNotSupportedException("NIF version \""
 					+ nifVersion + "\" is not supported");
 		}
-		NIFParameterSet parameters = this.normalizeNif(input, informat,
+		NIFParameterSet parameters = restHelper.normalizeNif(input, informat,
 				outformat, postBody, acceptHeader, contentTypeHeader, prefix);
 
 		// create rdf model
 		String plaintext = null;
 		Model inputModel = ModelFactory.createDefaultModel();
 
-		if (!parameters.getInformat().equals(
-				RDFConstants.RDFSerialization.PLAINTEXT)) {
+		if (!parameters.getInformatString().equals(SerializationFormatMapper.PLAINTEXT)) {
 			// input is nif
 			try {
-				inputModel = this.unserializeNif(parameters.getInput(),
+				inputModel = rdfConversionService.unserializeRDF(parameters.getInput(),
 						parameters.getInformat());
 			} catch (Exception e) {
 				logger.error("failed", e);
@@ -119,7 +128,7 @@ public class TildeETranslation extends BaseRestController {
 		} else {
 			// input is plaintext
 			plaintext = parameters.getInput();
-			getRdfConversionService().plaintextToRDF(inputModel, plaintext,
+			rdfConversionService.plaintextToRDF(inputModel, plaintext,
 					sourceLang, parameters.getPrefix(), nifVersion);
 		}
 
@@ -138,7 +147,7 @@ public class TildeETranslation extends BaseRestController {
 					.queryString("domain", domain)
 					.queryString("key", key)
 					.queryString("nif-version", nifVersion)
-					.body(getRdfConversionService().serializeRDF(inputModel,
+					.body(rdfConversionService.serializeRDF(inputModel,
 							RDFSerialization.TURTLE)).asString();
 
 			if (response.getStatus() != HttpStatus.OK.value()) {
@@ -149,7 +158,7 @@ public class TildeETranslation extends BaseRestController {
 
 			String translation = response.getBody();
 
-			responseModel = getRdfConversionService().unserializeRDF(
+			responseModel = rdfConversionService.unserializeRDF(
 					translation, RDFSerialization.TURTLE);
 
 		} catch (Exception e) {
@@ -162,6 +171,6 @@ public class TildeETranslation extends BaseRestController {
 			}
 		}
 
-		return createSuccessResponse(responseModel, parameters.getOutformat());
+		return  restHelper.createSuccessResponse(responseModel, parameters.getOutformatString());
 	}
 }

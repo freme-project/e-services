@@ -6,10 +6,7 @@ import eu.freme.common.conversion.rdf.RDFConversionService;
 import eu.freme.common.exception.*;
 import eu.freme.common.persistence.dao.OwnedResourceDAO;
 import eu.freme.common.persistence.model.Template;
-import eu.freme.common.rest.BaseRestController;
-import eu.freme.common.rest.NIFParameterFactory;
-import eu.freme.common.rest.NIFParameterSet;
-import eu.freme.common.rest.OwnedResourceManagingController;
+import eu.freme.common.rest.*;
 import eu.freme.eservices.elink.api.DataEnricher;
 import eu.freme.eservices.elink.exceptions.InvalidNIFException;
 import eu.freme.eservices.elink.exceptions.InvalidTemplateEndpointException;
@@ -44,12 +41,6 @@ public class LinkingController extends BaseRestController{
     TemplateValidator templateValidator;
 
     @Autowired
-    RDFConversionService rdfConversionService;
-
-    @Autowired
-    NIFParameterFactory nifParameterFactory;
-
-    @Autowired
     OwnedResourceDAO<Template> entityDAO;
 
     // Enriching using a template.
@@ -77,7 +68,7 @@ public class LinkingController extends BaseRestController{
             }
 
             // int templateId = validateTemplateID(templateIdStr);
-            NIFParameterSet nifParameters = this.normalizeNif(postBody,
+            NIFParameterSet nifParameters = normalizeNif(postBody,
                     acceptHeader, contentTypeHeader, allParams, false);
 
             // templateDAO.findOneById(templateIdStr);
@@ -87,19 +78,19 @@ public class LinkingController extends BaseRestController{
             HashMap<String, String> templateParams = new HashMap<>();
 
             for (Map.Entry<String, String> entry : allParams.entrySet()) {
-                if (!nifParameterFactory.isNIFParameter(entry.getKey())) {
+                if (!getNifParameterFactory().isNIFParameter(entry.getKey())) {
                     templateParams.put(entry.getKey(), entry.getValue());
                 }
             }
 
-            Model inModel = rdfConversionService.unserializeRDF(
-                    nifParameters.getInput(), nifParameters.getInformat());
+            Model inModel = unserializeRDF(
+                    nifParameters.getInput(), nifParameters.getInformatString());
             inModel = dataEnricher.enrichWithTemplate(inModel, template,
                     templateParams);
 
             HttpHeaders responseHeaders = new HttpHeaders();
-            String serialization = rdfConversionService.serializeRDF(inModel,
-                    nifParameters.getOutformat());
+            String serialization = serializeRDF(inModel,
+                    nifParameters.getOutformatString());
             responseHeaders.add("Content-Type", nifParameters.getOutformat()
                     .contentType());
             return new ResponseEntity<>(serialization, responseHeaders,
@@ -142,15 +133,15 @@ public class LinkingController extends BaseRestController{
         try {
 
             templateValidator.validateTemplateEndpoint(endpoint);
-            NIFParameterSet nifParameters = this.normalizeNif("", acceptHeader,
+            NIFParameterSet nifParameters = normalizeNif("", acceptHeader,
                     contentTypeHeader, allParams, false);
 
             Model inModel = dataEnricher.exploreResource(resource, endpoint,
                     endpointType);
 
             HttpHeaders responseHeaders = new HttpHeaders();
-            String serialization = rdfConversionService.serializeRDF(inModel,
-                    nifParameters.getOutformat());
+            String serialization = serializeRDF(inModel,
+                    nifParameters.getOutformatString());
             responseHeaders.add("Content-Type", nifParameters.getOutformat()
                     .contentType());
             return new ResponseEntity<>(serialization, responseHeaders,
