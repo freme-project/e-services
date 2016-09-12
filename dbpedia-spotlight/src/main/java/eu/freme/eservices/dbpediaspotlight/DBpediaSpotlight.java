@@ -50,6 +50,11 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 import eu.freme.common.conversion.rdf.RDFConstants;
 
+import static eu.freme.common.conversion.rdf.JenaRDFConversionService.JENA_TURTLE;
+import static eu.freme.common.conversion.rdf.RDFConstants.IS_STRING;
+import static eu.freme.common.conversion.rdf.RDFConstants.NIF_CONTEXT_TYPE;
+import static eu.freme.common.conversion.rdf.RDFConstants.nifPrefix;
+
 @RestController
 public class DBpediaSpotlight extends BaseRestController {
 
@@ -65,15 +70,6 @@ public class DBpediaSpotlight extends BaseRestController {
     @RequestMapping(value = "/e-entity/dbpedia-spotlight/documents", method = {
             RequestMethod.POST, RequestMethod.GET})
     public ResponseEntity<String> execute(
-            /*@RequestParam(value = "input", required = false) String input,
-			@RequestParam(value = "i", required = false) String i,
-			@RequestParam(value = "informat", required = false) String informat,
-			@RequestParam(value = "f", required = false) String f,
-			@RequestParam(value = "outformat", required = false) String outformat,
-			@RequestParam(value = "o", required = false) String o,
-			@RequestParam(value = "prefix", required = false) String prefix,
-			@RequestParam(value = "p", required = false) String p,
-			*/
             @RequestHeader(value = "Accept", required = false) String acceptHeader,
             @RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
             @RequestParam(value = "language", required = true) String languageParam,
@@ -104,7 +100,7 @@ public class DBpediaSpotlight extends BaseRestController {
 
                 inModel = rdfConversionService.unserializeRDF(nifParameters.getInput(), nifParameters.getInformat());
 
-                iter = inModel.listStatements(null, RDF.type, inModel.getResource("http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#Context"));
+                iter = inModel.listStatements(null, RDF.type, inModel.getResource(nifPrefix+NIF_CONTEXT_TYPE));
 
                 boolean textFound = false;
                 String tmpPrefix = "http://freme-project.eu/#";
@@ -115,7 +111,7 @@ public class DBpediaSpotlight extends BaseRestController {
 //                    System.out.println(tmpPrefix);
                     nifParameters.setPrefix(tmpPrefix + "#");
 //                    System.out.println(parameters.getPrefix());
-                    Statement isStringStm = contextRes.getProperty(inModel.getProperty("http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#isString"));
+                    Statement isStringStm = contextRes.getProperty(inModel.getProperty(nifPrefix+IS_STRING));
                     if (isStringStm != null) {
                         textForProcessing = isStringStm.getObject().asLiteral().getString();
                         textFound = true;
@@ -131,7 +127,7 @@ public class DBpediaSpotlight extends BaseRestController {
             validateConfidenceScore(confidenceParam);
 
             String dbpediaSpotlightRes = callDBpediaSpotlight(textForProcessing, confidenceParam, languageParam, nifParameters.getPrefix());
-            outModel.read(new ByteArrayInputStream(dbpediaSpotlightRes.getBytes()), null, "TTL");
+            outModel.read(new ByteArrayInputStream(dbpediaSpotlightRes.getBytes()), null, JENA_TURTLE);
             outModel.add(inModel);
             // remove unwanted info
             outModel.removeAll(null, RDF.type, OWL.ObjectProperty);
