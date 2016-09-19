@@ -17,34 +17,25 @@
  */
 package eu.freme.eservices.tilde.translation;
 
-import eu.freme.common.conversion.SerializationFormatMapper;
-import eu.freme.common.conversion.rdf.RDFConversionService;
-import eu.freme.common.rest.RestHelper;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import eu.freme.common.conversion.etranslate.TranslationConversionService;
+import eu.freme.common.conversion.rdf.RDFConstants;
+import eu.freme.common.exception.ExternalServiceFailedException;
+import eu.freme.common.exception.NIFVersionNotSupportedException;
+import eu.freme.common.rest.BaseRestController;
+import eu.freme.common.rest.NIFParameterSet;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
+import java.util.Map;
 
-import eu.freme.common.conversion.etranslate.TranslationConversionService;
-import eu.freme.common.conversion.rdf.RDFConstants;
-import eu.freme.common.conversion.rdf.RDFConstants.RDFSerialization;
-import eu.freme.common.exception.BadRequestException;
-import eu.freme.common.exception.ExternalServiceFailedException;
-import eu.freme.common.exception.NIFVersionNotSupportedException;
-import eu.freme.common.rest.BaseRestController;
-import eu.freme.common.rest.NIFParameterSet;
+import static eu.freme.common.conversion.rdf.RDFConstants.TURTLE;
 
 /**
  * REST controller for Tilde e-Translation service
@@ -58,26 +49,12 @@ public class TildeETranslation extends BaseRestController {
 
 	@Autowired
 	TranslationConversionService translationConversionService;
-
-	@Autowired
-	RDFConversionService rdfConversionService;
-
-	@Autowired
-	RestHelper restHelper;
 	
 		//live version: https://services.tilde.com/translation/
 	@Value("${freme.broker.tildeETranslationUrl:https://services.tilde.com/dev/translation?sourceLang={source-lang}&targetLang={target-lang}}")
 	private String endpoint;
 	@RequestMapping(value = "/e-translation/tilde", method = RequestMethod.POST)
 	public ResponseEntity<String> tildeTranslate(
-			@RequestParam(value = "input", required = false) String input,
-			@RequestParam(value = "i", required = false) String i,
-			@RequestParam(value = "informat", required = false) String informat,
-			@RequestParam(value = "f", required = false) String f,
-			@RequestParam(value = "outformat", required = false) String outformat,
-			@RequestParam(value = "o", required = false) String o,
-			@RequestParam(value = "prefix", required = false) String prefix,
-			@RequestParam(value = "p", required = false) String p,
 			@RequestHeader(value = "Accept", required = false) String acceptHeader,
 			@RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
 			@RequestBody(required = false) String postBody,
@@ -86,51 +63,13 @@ public class TildeETranslation extends BaseRestController {
 			@RequestParam(value = "domain", defaultValue = "") String domain,
 			@RequestParam(value = "system", defaultValue = "full") String system,
 			@RequestParam(value = "key", required = false) String key,
-			@RequestParam(value = "nif-version", required = false) String nifVersion) {
+			@RequestParam(value = "nif-version", required = false) String nifVersion,
+			@RequestParam Map<String, String> allParams)
+	{
 
-		// merge long and short parameters - long parameters override short
-		// parameters
-		if (input == null) {
-			input = i;
-		}
-		if (informat == null) {
-			informat = f;
-		}
-		if (outformat == null) {
-			outformat = o;
-		}
-		if (prefix == null) {
-			prefix = p;
-		}
-
-		if (nifVersion != null
-				&& !(nifVersion.equals(RDFConstants.nifVersion2_0)
-				|| nifVersion.equals(RDFConstants.nifVersion2_1))) {
-			throw new NIFVersionNotSupportedException("NIF version \""
-					+ nifVersion + "\" is not supported");
-		}
-		NIFParameterSet parameters = restHelper.normalizeNif(input, informat,
-				outformat, postBody, acceptHeader, contentTypeHeader, prefix);
-
-		// create rdf model
-		String plaintext = null;
-		Model inputModel = ModelFactory.createDefaultModel();
-
-		if (!parameters.getInformatString().equals(SerializationFormatMapper.PLAINTEXT)) {
-			// input is nif
-			try {
-				inputModel = rdfConversionService.unserializeRDF(parameters.getInput(),
-						parameters.getInformat());
-			} catch (Exception e) {
-				logger.error("failed", e);
-				throw new BadRequestException("Error parsing NIF input");
-			}
-		} else {
-			// input is plaintext
-			plaintext = parameters.getInput();
-			rdfConversionService.plaintextToRDF(inputModel, plaintext,
-					sourceLang, parameters.getPrefix(), nifVersion);
-		}
+		NIFParameterSet parameters = normalizeNif(postBody,acceptHeader,contentTypeHeader, allParams, false);
+		parameters.setNifVersion(nifVersion);
+		Model inputModel = getRestHelper().convertInputToRDFModel(parameters);
 
 		// send request to tilde mt
 		Model responseModel = null;
@@ -147,8 +86,7 @@ public class TildeETranslation extends BaseRestController {
 					.queryString("domain", domain)
 					.queryString("key", key)
 					.queryString("nif-version", nifVersion)
-					.body(rdfConversionService.serializeRDF(inputModel,
-							RDFSerialization.TURTLE)).asString();
+					.body(serializeRDF(inputModel, TURTLE)).asString();
 
 			if (response.getStatus() != HttpStatus.OK.value()) {
 				throw new ExternalServiceFailedException(
@@ -158,8 +96,7 @@ public class TildeETranslation extends BaseRestController {
 
 			String translation = response.getBody();
 
-			responseModel = rdfConversionService.unserializeRDF(
-					translation, RDFSerialization.TURTLE);
+			responseModel = unserializeRDF(translation, TURTLE);
 
 		} catch (Exception e) {
 			if (e instanceof ExternalServiceFailedException) {
@@ -171,6 +108,6 @@ public class TildeETranslation extends BaseRestController {
 			}
 		}
 
-		return  restHelper.createSuccessResponse(responseModel, parameters.getOutformatString());
+		return  createSuccessResponse(responseModel, parameters.getOutformatString());
 	}
 }

@@ -1,17 +1,15 @@
 package eu.freme.eservices.elink;
 
-import com.google.common.base.Strings;
 import com.hp.hpl.jena.rdf.model.Model;
-import eu.freme.common.conversion.rdf.RDFConversionService;
 import eu.freme.common.exception.*;
 import eu.freme.common.persistence.dao.OwnedResourceDAO;
 import eu.freme.common.persistence.model.Template;
-import eu.freme.common.rest.*;
+import eu.freme.common.rest.BaseRestController;
+import eu.freme.common.rest.NIFParameterSet;
 import eu.freme.eservices.elink.api.DataEnricher;
 import eu.freme.eservices.elink.exceptions.InvalidNIFException;
 import eu.freme.eservices.elink.exceptions.InvalidTemplateEndpointException;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -51,7 +49,7 @@ public class LinkingController extends BaseRestController{
     @RequestMapping(value = "/documents", method = RequestMethod.POST)
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public ResponseEntity<String> enrich(
-            @RequestParam(value = templateIdentiferName, required = true) String templateIdStr,
+            @RequestParam(value = templateIdentiferName) String templateIdStr,
             @RequestHeader(value = "Accept", required = false) String acceptHeader,
             @RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
             @RequestBody (required = false) String postBody,
@@ -91,8 +89,7 @@ public class LinkingController extends BaseRestController{
             HttpHeaders responseHeaders = new HttpHeaders();
             String serialization = serializeRDF(inModel,
                     nifParameters.getOutformatString());
-            responseHeaders.add("Content-Type", nifParameters.getOutformat()
-                    .contentType());
+            responseHeaders.add("Content-Type", nifParameters.getOutformatString());
             return new ResponseEntity<>(serialization, responseHeaders,
                     HttpStatus.OK);
         } catch (AccessDeniedException ex) {
@@ -127,8 +124,8 @@ public class LinkingController extends BaseRestController{
             @RequestHeader(value = "Accept", required = false) String acceptHeader,
             @RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
             @RequestParam Map<String, String> allParams,
-            @RequestParam(value = "resource", required = true) String resource,
-            @RequestParam(value = "endpoint", required = true) String endpoint,
+            @RequestParam(value = "resource") String resource,
+            @RequestParam(value = "endpoint") String endpoint,
             @RequestParam(value = "endpoint-type", required = false) String endpointType) {
         try {
 
@@ -142,8 +139,7 @@ public class LinkingController extends BaseRestController{
             HttpHeaders responseHeaders = new HttpHeaders();
             String serialization = serializeRDF(inModel,
                     nifParameters.getOutformatString());
-            responseHeaders.add("Content-Type", nifParameters.getOutformat()
-                    .contentType());
+            responseHeaders.add("Content-Type", nifParameters.getOutformatString());
             return new ResponseEntity<>(serialization, responseHeaders,
                     HttpStatus.OK);
         } catch (InvalidTemplateEndpointException ex) {

@@ -17,34 +17,21 @@
  */
 package eu.freme.eservices.tilde.terminology;
 
-import eu.freme.common.conversion.SerializationFormatMapper;
-import eu.freme.common.conversion.rdf.RDFConversionService;
-import eu.freme.common.rest.RestHelper;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-
-import eu.freme.common.conversion.etranslate.TranslationConversionService;
 import eu.freme.common.conversion.rdf.RDFConstants;
-import eu.freme.common.conversion.rdf.RDFConstants.RDFSerialization;
-import eu.freme.common.exception.BadRequestException;
 import eu.freme.common.exception.ExternalServiceFailedException;
 import eu.freme.common.exception.NIFVersionNotSupportedException;
 import eu.freme.common.rest.BaseRestController;
 import eu.freme.common.rest.NIFParameterSet;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import static eu.freme.common.conversion.rdf.RDFConstants.TURTLE;
 
@@ -57,8 +44,6 @@ import static eu.freme.common.conversion.rdf.RDFConstants.TURTLE;
 public class TildeETerminology extends BaseRestController {
 
 	Logger logger = Logger.getLogger(TildeETerminology.class);
-//	@Autowired
-//	TranslationConversionService translationConversionService;
 
 //	@Value("${freme.broker.tildeETerminologyUrl:https://services.tilde.com/Terminology/?sourceLang={source-lang}&targetLang={target-lang}}")
 	@Value("${freme.broker.tildeETerminologyUrl:https://services.tilde.com/Terminology/}")
@@ -67,14 +52,6 @@ public class TildeETerminology extends BaseRestController {
 
 	@RequestMapping(value = "/e-terminology/tilde", method = RequestMethod.POST)
 	public ResponseEntity<String> tildeTranslate(
-			@RequestParam(value = "input", required = false) String input,
-			@RequestParam(value = "i", required = false) String i,
-			@RequestParam(value = "informat", required = false) String informat,
-			@RequestParam(value = "f", required = false) String f,
-			@RequestParam(value = "outformat", required = false) String outformat,
-			@RequestParam(value = "o", required = false) String o,
-			@RequestParam(value = "prefix", required = false) String prefix,
-			@RequestParam(value = "p", required = false) String p,
 			@RequestHeader(value = "Accept", required = false) String acceptHeader,
 			@RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
 			@RequestBody(required = false) String postBody,
@@ -84,53 +61,13 @@ public class TildeETerminology extends BaseRestController {
 			@RequestParam(value = "mode", defaultValue = "full") String mode,
 			@RequestParam(value = "collection", required = false) String collection,
 			@RequestParam(value = "key", required= false) String key,
-			@RequestParam(value = "nif-version", required = false) String nifVersion
+			@RequestParam(value = "nif-version", required = false) String nifVersion,
+			@RequestParam Map<String, String> allParams
 	) {
-		// merge long and short parameters - long parameters override short
-		// parameters
-		if (input == null) {
-			input = i;
-		}
-		if (informat == null) {
-			informat = f;
-		}
-		if (outformat == null) {
-			outformat = o;
-		}
-		if (prefix == null) {
-			prefix = p;
-		}
-		
-		if (nifVersion != null
-				&& !(nifVersion.equals(RDFConstants.nifVersion2_0)
-				|| nifVersion.equals(RDFConstants.nifVersion2_1))) {
-			throw new NIFVersionNotSupportedException("NIF version \""
-					+ nifVersion + "\" is not supported");
-		}
-		
-		NIFParameterSet parameters = normalizeNif(input, informat,
-				outformat, postBody, acceptHeader, contentTypeHeader, prefix);
 
-		// create rdf model
-		String plaintext = null;
-		Model inputModel = ModelFactory.createDefaultModel();
-
-		if (!parameters.getInformatString().equals(SerializationFormatMapper.PLAINTEXT)) {
-			// input is nif
-			try {
-				inputModel = unserializeRDF(parameters.getInput(),
-						parameters.getInformatString());
-			} catch (Exception e) {
-				logger.error("failed", e);
-				throw new BadRequestException("Error parsing NIF input");
-			}
-		} else {
-			// input is plaintext
-			plaintext = parameters.getInput();
-			getRdfConversionService().plaintextToRDF(inputModel, plaintext,
-					sourceLang, parameters.getPrefix(), nifVersion);
-
-		}
+		NIFParameterSet parameters = normalizeNif(postBody,acceptHeader,contentTypeHeader, allParams, false);
+		parameters.setNifVersion(nifVersion);
+		Model inputModel = getRestHelper().convertInputToRDFModel(parameters);
 
 		// send request to tilde mt
 		Model responseModel = null;

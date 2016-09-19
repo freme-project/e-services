@@ -70,7 +70,7 @@ public class DBpediaSpotlight extends BaseRestController {
     public ResponseEntity<String> execute(
             @RequestHeader(value = "Accept", required = false) String acceptHeader,
             @RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
-            @RequestParam(value = "language", required = true) String languageParam,
+            @RequestParam(value = "language") String languageParam,
             @RequestParam(value = "confidence", required = false) String confidenceParam,
             @RequestParam Map<String, String> allParams,
             @RequestBody(required = false) String postBody) {
@@ -96,7 +96,7 @@ public class DBpediaSpotlight extends BaseRestController {
                 textForProcessing = nifParameters.getInput();
             } else {
 
-                inModel = unserializeRDF(nifParameters.getInput(), nifParameters.getInformat());
+                inModel = unserializeRDF(nifParameters.getInput(), nifParameters.getInformatString());
 
                 iter = inModel.listStatements(null, RDF.type, inModel.getResource(nifPrefix+NIF_CONTEXT_TYPE));
 
