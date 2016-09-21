@@ -17,45 +17,30 @@
  */
 package eu.freme.eservices.dbpediaspotlight;
 
+import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.OWL;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import eu.freme.common.conversion.SerializationFormatMapper;
+import eu.freme.common.exception.BadRequestException;
+import eu.freme.common.exception.ExternalServiceFailedException;
+import eu.freme.common.rest.BaseRestController;
+import eu.freme.common.rest.NIFParameterSet;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import eu.freme.common.conversion.SerializationFormatMapper;
-import eu.freme.common.conversion.rdf.RDFConversionService;
-import eu.freme.common.exception.BadRequestException;
-import eu.freme.common.exception.ExternalServiceFailedException;
-import eu.freme.common.rest.BaseRestController;
-import eu.freme.common.rest.NIFParameterSet;
-import eu.freme.common.rest.RestHelper;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.ResIterator;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
-
-import eu.freme.common.conversion.rdf.RDFConstants;
-
 import static eu.freme.common.conversion.rdf.JenaRDFConversionService.JENA_TURTLE;
-import static eu.freme.common.conversion.rdf.RDFConstants.IS_STRING;
-import static eu.freme.common.conversion.rdf.RDFConstants.NIF_CONTEXT_TYPE;
-import static eu.freme.common.conversion.rdf.RDFConstants.nifPrefix;
+import static eu.freme.common.conversion.rdf.RDFConstants.*;
 
 @RestController
 public class DBpediaSpotlight extends BaseRestController {

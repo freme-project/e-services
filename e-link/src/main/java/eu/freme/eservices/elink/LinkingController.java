@@ -11,8 +11,6 @@ import eu.freme.eservices.elink.exceptions.InvalidNIFException;
 import eu.freme.eservices.elink.exceptions.InvalidTemplateEndpointException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
@@ -56,9 +54,8 @@ public class LinkingController extends BaseRestController{
             @RequestParam Map<String, String> allParams) {
         try {
 
-            Long templateId;
             try {
-                templateId = new Long(templateIdStr);
+                new Long(templateIdStr);
             } catch (NumberFormatException e) {
                 logger.error(e);
                 String msg = "Parameter templateid is required to be a numeric value.";
@@ -86,12 +83,7 @@ public class LinkingController extends BaseRestController{
             inModel = dataEnricher.enrichWithTemplate(inModel, template,
                     templateParams);
 
-            HttpHeaders responseHeaders = new HttpHeaders();
-            String serialization = serializeRDF(inModel,
-                    nifParameters.getOutformatString());
-            responseHeaders.add("Content-Type", nifParameters.getOutformatString());
-            return new ResponseEntity<>(serialization, responseHeaders,
-                    HttpStatus.OK);
+            return createSuccessResponse(inModel,nifParameters.getOutformatString());
         } catch (AccessDeniedException ex) {
             logger.error(ex.getMessage(), ex);
             throw ex;
@@ -136,12 +128,8 @@ public class LinkingController extends BaseRestController{
             Model inModel = dataEnricher.exploreResource(resource, endpoint,
                     endpointType);
 
-            HttpHeaders responseHeaders = new HttpHeaders();
-            String serialization = serializeRDF(inModel,
-                    nifParameters.getOutformatString());
-            responseHeaders.add("Content-Type", nifParameters.getOutformatString());
-            return new ResponseEntity<>(serialization, responseHeaders,
-                    HttpStatus.OK);
+            createSuccessResponse(inModel,nifParameters.getOutformatString());
+            return createSuccessResponse(inModel,nifParameters.getOutformatString());
         } catch (InvalidTemplateEndpointException ex) {
             logger.error(ex.getMessage(), ex);
             throw new InvalidTemplateEndpointException(ex.getMessage());
