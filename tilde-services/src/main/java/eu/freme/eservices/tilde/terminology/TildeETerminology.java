@@ -61,16 +61,18 @@ public class TildeETerminology extends BaseRestController {
 			@RequestParam(value = "mode", defaultValue = "full") String mode,
 			@RequestParam(value = "collection", required = false) String collection,
 			@RequestParam(value = "key", required= false) String key,
-			@RequestParam(value = "nif-version", required = false) String nifVersion,
+			//// moved to eu.freme.common.rest.RestHelper.normalizeNif(String postBody, String acceptHeader,
+			//// String contentTypeHeader, Map<String, String> parameters, boolean allowEmptyInput) and
+			//// eu.freme.common.rest.NIFParameterFactory.constructFromHttp(...)
+			//@RequestParam(value = "nif-version", defaultValue = nifVersion2_0) String nifVersion,
 			@RequestParam Map<String, String> allParams
 	) {
 
 		NIFParameterSet parameters = normalizeNif(postBody,acceptHeader,contentTypeHeader, allParams, false);
-		parameters.setNifVersion(nifVersion);
 		Model inputModel = getRestHelper().convertInputToRDFModel(parameters);
 
 		// send request to tilde mt
-		Model responseModel = null;
+		Model responseModel;
 		try {
 			HttpResponse<String> response = Unirest.post(endpoint)
 					.queryString("sourceLang", sourceLang)
@@ -82,7 +84,7 @@ public class TildeETerminology extends BaseRestController {
 					.queryString("collection", collection)
 					.header("Authentication", "Basic RlJFTUU6dXxGcjNtM19zJGN1ciQ=")
 					.queryString("key", key)
-					.queryString("nif-version", nifVersion)
+					.queryString("nif-version", parameters.getNifVersion())
 					.body(serializeRDF(inputModel, TURTLE)).asString();
 
 
