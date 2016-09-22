@@ -1,6 +1,7 @@
 package eu.freme.eservices.elink;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import eu.freme.common.conversion.rdf.RDFConstants;
 import eu.freme.common.exception.*;
 import eu.freme.common.persistence.dao.OwnedResourceDAO;
 import eu.freme.common.persistence.model.Template;
@@ -114,7 +115,7 @@ public class LinkingController extends BaseRestController{
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public ResponseEntity<String> exploreResource(
             @RequestHeader(value = "Accept", required = false) String acceptHeader,
-            @RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
+            //@RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
             @RequestParam Map<String, String> allParams,
             @RequestParam(value = "resource") String resource,
             @RequestParam(value = "endpoint") String endpoint,
@@ -122,14 +123,13 @@ public class LinkingController extends BaseRestController{
         try {
 
             templateValidator.validateTemplateEndpoint(endpoint);
-            NIFParameterSet nifParameters = normalizeNif("", acceptHeader,
-                    contentTypeHeader, allParams, false);
+            NIFParameterSet nifParameters = normalizeNif(null, acceptHeader,
+                    null, allParams, true);
 
-            Model inModel = dataEnricher.exploreResource(resource, endpoint,
+            Model outModel = dataEnricher.exploreResource(resource, endpoint,
                     endpointType);
 
-            createSuccessResponse(inModel,nifParameters.getOutformatString());
-            return createSuccessResponse(inModel,nifParameters.getOutformatString());
+            return createSuccessResponse(outModel,nifParameters.getOutformatString());
         } catch (InvalidTemplateEndpointException ex) {
             logger.error(ex.getMessage(), ex);
             throw new InvalidTemplateEndpointException(ex.getMessage());
