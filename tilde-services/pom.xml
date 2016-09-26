@@ -5,7 +5,7 @@
     <artifactId>freme-parent</artifactId>
     <version>0.10</version>
   </parent>
-  <version>0.6-SNAPSHOT</version> 
+  <version>0.6</version> 
   <artifactId>tilde-services</artifactId>
   <groupId>eu.freme.e-services</groupId>
     <dependencies>
