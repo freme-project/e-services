@@ -74,9 +74,15 @@ public class Section {
         while (i < sections.size() && !sectionFound) {
             Section section = sections.get(i);
             
-            sectionFound = section.getResource().equals(resource);
+            String temp = section.getResource();
             
-            if (sections.get(i).getSubsections() != null) {
+            if (temp.contains("#")) {
+                temp = temp.substring(0, temp.indexOf("#"));
+            }
+            
+            sectionFound = temp.equals(resource);
+            
+            if (!sectionFound && sections.get(i).getSubsections() != null) {
                 if (hasSectionWithResource(sections, resource)) {
                     sectionFound = true;
                 }

@@ -170,7 +170,8 @@ public class EPubCreatorImpl implements EPubCreator {
             
             
             try (FileInputStream fis = new FileInputStream(new File(unzippedPath, sectionResource))) {
-                resource = new Resource(fis, section.getResource());
+                //resource = new Resource(fis, section.getResource());
+                resource = new Resource(fis, sectionResource, section.getResource());
             }
 
             TOCReference bookSection;
@@ -237,22 +238,22 @@ public class EPubCreatorImpl implements EPubCreator {
         File[] listOfFiles = folder.listFiles();
 
         if (listOfFiles != null) {
-            for (File listOfFile : listOfFiles) {
-                if (listOfFile.isFile() && !isFileAlreadyAdded(listOfFile)) {
+            for (File file : listOfFiles) {
+                if (file.isFile() && !isFileAlreadyAdded(file)) {
                     if (parent == null || parent.equals("")) {
-                        try (FileInputStream fis = new FileInputStream(listOfFile)) {
-                            book.addResource(new Resource(fis, listOfFile.getName()));
+                        try (FileInputStream fis = new FileInputStream(file)) {
+                            book.addResource(new Resource(fis, file.getName()));
                         }
                     } else {
-                        try (FileInputStream fis = new FileInputStream(listOfFile)) {
-                            book.addResource(new Resource(fis, parent + File.separator + listOfFile.getName()));
+                        try (FileInputStream fis = new FileInputStream(file)) {
+                            book.addResource(new Resource(fis, parent + File.separator + file.getName()));
                         }
                     }
-                } else if (listOfFile.isDirectory()) {
+                } else if (file.isDirectory()) {
                     if (parent == null || parent.equals("")) {
-                        copyUnaddedFilesFromZipToEpub(listOfFile.getName());
+                        copyUnaddedFilesFromZipToEpub(file.getName());
                     } else {
-                        copyUnaddedFilesFromZipToEpub(parent + File.separator + listOfFile.getName());
+                        copyUnaddedFilesFromZipToEpub(parent + File.separator + file.getName());
                     }
                 }
             }
@@ -261,6 +262,7 @@ public class EPubCreatorImpl implements EPubCreator {
     
     private boolean isFileAlreadyAdded(File file) {
         String name = file.getAbsolutePath().replace(unzippedPath + File.separator, "");
+
         return Section.hasSectionWithResource(ourMetadata.getTableOfContents(), name) || name.equals(ourMetadata.getCoverImage());
     }
 
