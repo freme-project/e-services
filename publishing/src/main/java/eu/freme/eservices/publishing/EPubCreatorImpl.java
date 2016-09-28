@@ -161,7 +161,15 @@ public class EPubCreatorImpl implements EPubCreator {
     private void createSections(List<Section> toc, TOCReference parentSection) throws IOException {
         for (Section section : toc) {
             Resource resource;
-            try (FileInputStream fis = new FileInputStream(new File(unzippedPath, section.getResource()))) {
+             
+            String sectionResource = section.getResource();
+            
+            if (sectionResource.contains("#")) {
+                sectionResource = sectionResource.substring(0, sectionResource.indexOf("#"));
+            }
+            
+            
+            try (FileInputStream fis = new FileInputStream(new File(unzippedPath, sectionResource))) {
                 resource = new Resource(fis, section.getResource());
             }
 
