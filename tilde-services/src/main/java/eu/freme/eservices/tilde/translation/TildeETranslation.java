@@ -50,8 +50,9 @@ public class TildeETranslation extends BaseRestController {
 	@Autowired
 	TranslationConversionService translationConversionService;
 	
-		//live version: https://services.tilde.com/translation/
-	@Value("${freme.broker.tildeETranslationUrl:https://services.tilde.com/dev/translation?sourceLang={source-lang}&targetLang={target-lang}}")
+	//live version: https://services.tilde.com/translation/
+	//dev version: https://services.tilde.com/dev/translation
+	@Value("${freme.broker.tildeETranslationUrl:https://services.tilde.com/translation?sourceLang={source-lang}&targetLang={target-lang}}")
 	private String endpoint;
 	@RequestMapping(value = "/e-translation/tilde", method = RequestMethod.POST)
 	public ResponseEntity<String> tildeTranslate(
