@@ -54,6 +54,10 @@ public class TildeETranslation extends BaseRestController {
 	//dev version: https://services.tilde.com/dev/translation
 	@Value("${freme.broker.tildeETranslationUrl:https://services.tilde.com/translation?sourceLang={source-lang}&targetLang={target-lang}}")
 	private String endpoint;
+	
+	@Value("${tilde.translation.authentication:}")
+	private String authCode;
+	
 	@RequestMapping(value = "/e-translation/tilde", method = RequestMethod.POST)
 	public ResponseEntity<String> tildeTranslate(
 			@RequestHeader(value = "Accept", required = false) String acceptHeader,
@@ -76,6 +80,7 @@ public class TildeETranslation extends BaseRestController {
 
 		// send request to tilde mt
 		Model responseModel;
+		
 		try {
 			HttpResponse<String> response = Unirest
 					.post(endpoint)
@@ -84,8 +89,7 @@ public class TildeETranslation extends BaseRestController {
 					.header("Accept", "application/x-turtle")
 					.header("Content-Type", "application/x-turtle")
 					.queryString("system", system)
-					.header("Authentication",
-							"Basic RlJFTUU6dXxGcjNtM19zJGN1ciQ=")
+					.header("Authentication", authCode)
 					.queryString("domain", domain)
 					.queryString("key", key)
 					.queryString("nif-version", parameters.getNifVersion())

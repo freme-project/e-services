@@ -20,11 +20,13 @@ package eu.freme.eservices.tilde.terminology;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+
 import eu.freme.common.conversion.rdf.RDFConstants;
 import eu.freme.common.exception.ExternalServiceFailedException;
 import eu.freme.common.exception.NIFVersionNotSupportedException;
 import eu.freme.common.rest.BaseRestController;
 import eu.freme.common.rest.NIFParameterSet;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -50,6 +52,9 @@ public class TildeETerminology extends BaseRestController {
 //	private String endpoint;// = "https://services.tilde.com/translation/?sourceLang={source-lang}&targetLang={target-lang}";
 	private String endpoint = "https://services.tilde.com/Terminology/";
 
+	@Value("${tilde.terminology.authentication:}")
+	private String authCode;
+		
 	@RequestMapping(value = "/e-terminology/tilde", method = RequestMethod.POST)
 	public ResponseEntity<String> tildeTranslate(
 			@RequestHeader(value = "Accept", required = false) String acceptHeader,
@@ -82,7 +87,7 @@ public class TildeETerminology extends BaseRestController {
 					.header("Content-Type", "application/turtle")
 					.queryString("mode", mode)
 					.queryString("collection", collection)
-					.header("Authentication", "Basic RlJFTUU6dXxGcjNtM19zJGN1ciQ=")
+					.header("Authentication", authCode)
 					.queryString("key", key)
 					.queryString("nif-version", parameters.getNifVersion())
 					.body(serializeRDF(inputModel, TURTLE)).asString();
