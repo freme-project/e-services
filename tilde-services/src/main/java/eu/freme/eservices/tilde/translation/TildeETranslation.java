@@ -17,15 +17,19 @@
  */
 package eu.freme.eservices.tilde.translation;
 
+import com.google.common.base.Strings;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+
 import eu.freme.common.conversion.etranslate.TranslationConversionService;
 import eu.freme.common.conversion.rdf.RDFConstants;
+import eu.freme.common.exception.BadRequestException;
 import eu.freme.common.exception.ExternalServiceFailedException;
 import eu.freme.common.exception.NIFVersionNotSupportedException;
 import eu.freme.common.rest.BaseRestController;
 import eu.freme.common.rest.NIFParameterSet;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,22 +53,22 @@ public class TildeETranslation extends BaseRestController {
 
 	@Autowired
 	TranslationConversionService translationConversionService;
-	
+
 	//live version: https://services.tilde.com/translation/
 	//dev version: https://services.tilde.com/dev/translation
-	@Value("${freme.broker.tildeETranslationUrl:https://services.tilde.com/translation?sourceLang={source-lang}&targetLang={target-lang}}")
+	@Value("${freme.broker.tildeETranslationUrl:https://services.tilde.com/translation}")
 	private String endpoint;
-	
+
 	@Value("${tilde.translation.authentication:}")
 	private String authCode;
-	
+
 	@RequestMapping(value = "/e-translation/tilde", method = RequestMethod.POST)
 	public ResponseEntity<String> tildeTranslate(
 			@RequestHeader(value = "Accept", required = false) String acceptHeader,
 			@RequestHeader(value = "Content-Type", required = false) String contentTypeHeader,
 			@RequestBody(required = false) String postBody,
-			@RequestParam(value = "source-lang") String sourceLang,
-			@RequestParam(value = "target-lang") String targetLang,
+			@RequestParam(value = "source-lang", required = false) String sourceLang,
+			@RequestParam(value = "target-lang", required = false) String targetLang,
 			@RequestParam(value = "domain", defaultValue = "") String domain,
 			@RequestParam(value = "system", defaultValue = "full") String system,
 			@RequestParam(value = "key", required = false) String key,
@@ -73,27 +77,49 @@ public class TildeETranslation extends BaseRestController {
 			//// eu.freme.common.rest.NIFParameterFactory.constructFromHttp(...)
 			//@RequestParam(value = "nif-version", defaultValue = nifVersion2_0) String nifVersion,
 			@RequestParam Map<String, String> allParams)
-	{
+			{
 
 		NIFParameterSet parameters = normalizeNif(postBody,acceptHeader,contentTypeHeader, allParams, false);
 		Model inputModel = getRestHelper().convertInputToRDFModel(parameters);
 
 		// send request to tilde mt
-		Model responseModel;
-		
-		try {
-			HttpResponse<String> response = Unirest
-					.post(endpoint)
-					.routeParam("source-lang", sourceLang)
-					.routeParam("target-lang", targetLang)
-					.header("Accept", "application/x-turtle")
-					.header("Content-Type", "application/x-turtle")
-					.queryString("system", system)
-					.header("Authentication", authCode)
-					.queryString("domain", domain)
-					.queryString("key", key)
-					.queryString("nif-version", parameters.getNifVersion())
-					.body(serializeRDF(inputModel, TURTLE)).asString();
+		Model responseModel=null;
+
+		HttpResponse<String> response;
+		try{
+
+			if(Strings.isNullOrEmpty(sourceLang)){
+
+				response = Unirest
+						.post(endpoint)
+						.queryString("system", system)
+						.header("Accept", "application/x-turtle")
+						.header("Content-Type", "application/x-turtle")
+						.header("Authentication", authCode)
+						.queryString("domain", domain)
+						.queryString("key", key)
+						.queryString("nif-version", parameters.getNifVersion())
+						.body(serializeRDF(inputModel, TURTLE)).asString();
+
+			}else{
+
+				//source-lang and target-lang parameters are used
+				response = Unirest
+						.post(endpoint)
+						.queryString("sourcelang", sourceLang)
+						.queryString("targetlang", targetLang)
+						.header("Accept", "application/x-turtle")
+						.header("Content-Type", "application/x-turtle")
+						.queryString("system", system)
+						.header("Authentication", authCode)
+						.queryString("domain", domain)
+						.queryString("key", key)
+						.queryString("nif-version", parameters.getNifVersion())
+						.body(serializeRDF(inputModel, TURTLE)).asString();
+
+			}
+
+
 
 			if (response.getStatus() != HttpStatus.OK.value()) {
 				throw new ExternalServiceFailedException(
@@ -109,12 +135,12 @@ public class TildeETranslation extends BaseRestController {
 			if (e instanceof ExternalServiceFailedException) {
 				throw new ExternalServiceFailedException(e.getMessage(),
 						((ExternalServiceFailedException) e)
-								.getHttpStatusCode());
+						.getHttpStatusCode());
 			} else {
 				throw new ExternalServiceFailedException(e.getMessage());
 			}
 		}
 
 		return  createSuccessResponse(responseModel, parameters.getOutformatString());
-	}
+			}
 }

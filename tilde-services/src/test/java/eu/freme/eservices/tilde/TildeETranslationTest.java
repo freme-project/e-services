@@ -47,6 +47,7 @@ public class TildeETranslationTest {
 
 	String sourceLang = "en";
 	String targetLang = "de";
+	String system = "smt-c71f6f22-5e2a-4682-a4cc-2d97d38fac5e";
 	TestHelper testHelper;
 	ValidationHelper validationHelper;
 
@@ -58,17 +59,35 @@ public class TildeETranslationTest {
 		validationHelper = context.getBean(ValidationHelper.class);
 	}
 
-	private HttpRequestWithBody baseRequest() {
+	private HttpRequestWithBody baseRequest(String param) {
 		String url = testHelper.getAPIBaseUrl() + "/e-translation/tilde";
-		return Unirest.post(url).queryString("source-lang", sourceLang)
-				.queryString("target-lang", targetLang);
+		if(param.equals("system")){
+			return Unirest.post(url).queryString("system",system);
+		}else{
+			return Unirest.post(url).queryString("source-lang", sourceLang)
+					.queryString("target-lang", targetLang);
+		}
+	}
+
+
+	@Test
+	public void testEtranslateWithLangParam() throws UnirestException, IOException,
+	Exception {
+		doTest("");
 	}
 
 	@Test
-	public void testEtranslate() throws UnirestException, IOException,
-			Exception {
+	public void testEtranslateWithSystemParam() throws UnirestException, IOException,
+	Exception {
+		doTest("system");
+	}
 
-		HttpResponse<String> response = baseRequest()
+
+
+	private void doTest(String method) throws UnirestException, IOException,
+	Exception {
+
+		HttpResponse<String> response = baseRequest(method)
 				.queryString("informat", "text")
 				.queryString("input", "Show me the source of the light.")
 				.queryString("outformat", "rdf-xml").asString();
@@ -76,7 +95,7 @@ public class TildeETranslationTest {
 		validationHelper.validateNIFResponse(response, RDF_XML);
 
 		String data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/showmethesourceofthelight.ttl"));
-		response = baseRequest().header("Content-Type", "text/turtle")
+		response = baseRequest(method).header("Content-Type", "text/turtle")
 				.body(data).asString();
 		validationHelper.validateNIFResponse(response, TURTLE);
 
@@ -84,20 +103,20 @@ public class TildeETranslationTest {
 		assertTrue(response.getBody().length() > 0);
 
 		data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/showmethesourceofthelight.json"));
-		response = baseRequest().header("Content-Type", "application/json+ld")
+		response = baseRequest(method).header("Content-Type", "application/json+ld")
 				.queryString("outformat", "json-ld").body(data).asString();
 		assertTrue(response.getStatus() == 200);
 		assertTrue(response.getBody().length() > 0);
 		validationHelper.validateNIFResponse(response, JSON_LD);
 
 		data = FileUtils.readFileToString(new File("src/test/resources/rdftest/e-translate/showmethesourceofthelight.txt"));
-		response = baseRequest()
+		response = baseRequest(method)
 				.queryString("input", URLEncoder.encode(data, "UTF-8"))
 				.queryString("informat", "text").queryString("outformat", "n3")
 				.asString();
 		validationHelper.validateNIFResponse(response, N3);
 
-		response = baseRequest()
+		response = baseRequest(method)
 				.queryString("input", URLEncoder.encode(data, "UTF-8"))
 				.queryString("informat", "text")
 				.queryString("outformat", "n-triples").asString();
