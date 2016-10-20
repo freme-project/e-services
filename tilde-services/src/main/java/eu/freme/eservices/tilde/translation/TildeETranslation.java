@@ -85,17 +85,21 @@ public class TildeETranslation extends BaseRestController {
 		// send request to tilde mt
 		Model responseModel=null;
 
+		boolean useSystem = false;
 		//check if input parameters are provided correctly 
 		if(Strings.isNullOrEmpty(sourceLang) || Strings.isNullOrEmpty(targetLang)){
-			if(Strings.isNullOrEmpty(system))
+			
+			useSystem = true;
+			//default value of system is full
+			if(system.equals("full"))
 				throw new BadRequestException("Please specify either the two parameters 'source-lang' and 'target-lang' or the parameter 'system' to define the languages which shall be used.");
 		}
 
-
+		
 		HttpResponse<String> response;
 		try{
 
-			if(Strings.isNullOrEmpty(sourceLang)){
+			if(useSystem){
 
 				response = Unirest
 						.post(endpoint)
