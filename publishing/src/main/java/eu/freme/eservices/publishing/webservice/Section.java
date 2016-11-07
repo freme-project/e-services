@@ -83,7 +83,7 @@ public class Section {
             sectionFound = temp.equals(resource);
             
             if (!sectionFound && sections.get(i).getSubsections() != null) {
-                if (hasSectionWithResource(sections, resource)) {
+                if (hasSectionWithResource(sections.get(i).getSubsections(), resource)) {
                     sectionFound = true;
                 }
             }
