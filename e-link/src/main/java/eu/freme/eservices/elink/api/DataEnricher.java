@@ -21,6 +21,7 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.hp.hpl.jena.rdf.model.*;
 import eu.freme.common.exception.*;
 import eu.freme.common.persistence.model.Template;
@@ -118,7 +119,8 @@ public class DataEnricher {
                 try{
                 	e1 = QueryExecutionFactory.sparql
                         (endpoint, query);
-                    QueryEngineHTTP qeHttp = (QueryEngineHTTP) qe;
+                    Query
+                        HTTP qeHttp = (QueryEngineHTTP) qe;
                     qeHttp.setModelContentType("application/rdf+xml");
                     Model resModel1 = e1.execConstruct();
                     enrichment.add(resModel1);
