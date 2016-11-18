@@ -117,9 +117,8 @@ public class DataEnricher {
                 // Executing the enrichement.
                 QueryExecution e1 = null;
                 try{
-                	e1 = QueryExecutionFactory.sparql
-                        (endpoint, query);
-                    QueryEngineHTTP qeHttp = (QueryEngineHTTP) qe;
+                	e1 = QueryExecutionFactory.sparql(endpoint, query);
+                    QueryEngineHTTP qeHttp = (QueryEngineHTTP) e1;
                     qeHttp.setModelContentType("application/rdf+xml");
                     Model resModel1 = e1.execConstruct();
                     enrichment.add(resModel1);
@@ -170,7 +169,8 @@ public class DataEnricher {
     public Model enrichWithTemplateLDF(Model model, Template template, HashMap<String, String> templateParams) {
         StmtIterator ex = null;
         try {
-            ex = model.listStatements((Resource)null, model.getProperty("http://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode)null);
+            ex = model.listStatements((Resource)null, model.getProperty("
+                                                                        ://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode)null);
 
             Model enrichment = ModelFactory.createDefaultModel();
 
