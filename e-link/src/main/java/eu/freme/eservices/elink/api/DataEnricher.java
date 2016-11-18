@@ -128,7 +128,7 @@ public class DataEnricher {
                     e1 = null;
                 }  catch(org.apache.jena.riot.RiotException exc){
                     logger.error(getFullStackTrace(exc));
-                    throw new InternalServerErrorException("Problem: Could not process the enrichment result from the endpoint="+endpoint+" executing the query="+query+". Error message: "+exc.getMessage());
+                    throw new InternalServerErrorException("There is a problem: Could not process the enrichment result from the endpoint="+endpoint+" executing the query="+query+". Error message: "+exc.getMessage());
                 } catch (com.hp.hpl.jena.query.QueryParseException exc) {
                     logger.error(getFullStackTrace(exc));
                     throw new BadRequestException("It seems your SPARQL template is not correctly defined.");
