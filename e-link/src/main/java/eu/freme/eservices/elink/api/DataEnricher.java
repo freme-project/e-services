@@ -117,7 +117,7 @@ public class DataEnricher {
                 // Executing the enrichement.
                 QueryExecution e1 = null;
                 try{
-                	e1 = QueryExecutionFactory.sparql(endpoint, query);
+                	e1 = QueryExecutionFactory.sparqlService(endpoint, query);
                     QueryEngineHTTP qeHttp = (QueryEngineHTTP) e1;
                     qeHttp.setModelContentType("application/rdf+xml");
                     Model resModel1 = e1.execConstruct();
