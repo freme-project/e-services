@@ -140,55 +140,55 @@ public class LinkingControllerTest {
         vh.validateNIFResponse(response, TURTLE);
     }
 
-    @Test
-    public void testLinkingDocuments() throws Exception {
-
-        logger.info("testLinkingDocuments");
-
-        //String endpoint = "http://dbpedia.org/sparql/";
-        String endpoint = null;
-        logger.info("create private template");
-        Template privateTemplate = ormh.createEntity(
-                new SimpleEntityRequest(constructTemplate("Some label",  readFile("linking-sparql1.ttl"), endpoint, "Some description", "sparql", "private").toJson()),
-                AuthenticatedTestHelper.getTokenWithPermission(),
-                HttpStatus.OK
-        );
-
-        logger.info("create public template");
-        
-        Template publicTemplate = ormh.createEntity(
-                new SimpleEntityRequest(constructTemplate("Some label", readFile("linking-sparql1.ttl"), endpoint , "Some description", "sparql", "public").toJson()),
-                AuthenticatedTestHelper.getTokenWithPermission(),
-                HttpStatus.OK
-        );
-
-        logger.info("read nif to enrich");
-        String nifContent = readFile("data.ttl");
-        try {
-            logger.info("try to enrich via private template as other user... should not work");
-            LoggingHelper.loggerIgnore(LoggingHelper.accessDeniedExceptions);
-            assertEquals(HttpStatus.UNAUTHORIZED.value(), doLinking(nifContent, privateTemplate.getIdentifier(), AuthenticatedTestHelper.getTokenWithoutPermission(), new ArrayList<String>()));
-            LoggingHelper.loggerUnignore(LoggingHelper.accessDeniedExceptions);
-
-            logger.info("try to enrich via private template as template owner... should work");
-            ArrayList<String> response = new ArrayList<String>();
-            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, privateTemplate.getIdentifier(), AuthenticatedTestHelper.getTokenWithPermission(),response));
-            logger.info("check if the response contains the expected enrichment information that is obtained from applying the template");
-            assertTrue(response.get(0).contains("http://dbpedia.org/resource/Museum_of_Asian_Art")&&
-         		   	   response.get(0).contains("http://dbpedia.org/resource/Keramik-Museum_Berlin"));
-            
-            logger.info("try to enrich via public template as other user... should work");
-            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), AuthenticatedTestHelper.getTokenWithoutPermission(), new ArrayList<String>()));
-            
-            logger.info("try to enrich via public template as template owner... should work");
-            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), AuthenticatedTestHelper.getTokenWithPermission(), new ArrayList<String>()));
-        } finally {
-            logger.info("delete private template");
-            ormh.deleteEntity(privateTemplate.getIdentifier(),AuthenticatedTestHelper.getTokenWithPermission(),HttpStatus.OK);
-            logger.info("delete public template");
-            ormh.deleteEntity(publicTemplate.getIdentifier(),AuthenticatedTestHelper.getTokenWithPermission(),HttpStatus.OK);
-        }
-    }
+//    @Test
+//    public void testLinkingDocuments() throws Exception {
+//
+//        logger.info("testLinkingDocuments");
+//
+//        //String endpoint = "http://dbpedia.org/sparql/";
+//        String endpoint = null;
+//        logger.info("create private template");
+//        Template privateTemplate = ormh.createEntity(
+//                new SimpleEntityRequest(constructTemplate("Some label",  readFile("linking-sparql1.ttl"), endpoint, "Some description", "sparql", "private").toJson()),
+//                AuthenticatedTestHelper.getTokenWithPermission(),
+//                HttpStatus.OK
+//        );
+//
+//        logger.info("create public template");
+//        
+//        Template publicTemplate = ormh.createEntity(
+//                new SimpleEntityRequest(constructTemplate("Some label", readFile("linking-sparql1.ttl"), endpoint , "Some description", "sparql", "public").toJson()),
+//                AuthenticatedTestHelper.getTokenWithPermission(),
+//                HttpStatus.OK
+//        );
+//
+//        logger.info("read nif to enrich");
+//        String nifContent = readFile("data.ttl");
+//        try {
+//            logger.info("try to enrich via private template as other user... should not work");
+//            LoggingHelper.loggerIgnore(LoggingHelper.accessDeniedExceptions);
+//            assertEquals(HttpStatus.UNAUTHORIZED.value(), doLinking(nifContent, privateTemplate.getIdentifier(), AuthenticatedTestHelper.getTokenWithoutPermission(), new ArrayList<String>()));
+//            LoggingHelper.loggerUnignore(LoggingHelper.accessDeniedExceptions);
+//
+//            logger.info("try to enrich via private template as template owner... should work");
+//            ArrayList<String> response = new ArrayList<String>();
+//            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, privateTemplate.getIdentifier(), AuthenticatedTestHelper.getTokenWithPermission(),response));
+//            logger.info("check if the response contains the expected enrichment information that is obtained from applying the template");
+//            assertTrue(response.get(0).contains("http://dbpedia.org/resource/Museum_of_Asian_Art")&&
+//         		   	   response.get(0).contains("http://dbpedia.org/resource/Keramik-Museum_Berlin"));
+//            
+//            logger.info("try to enrich via public template as other user... should work");
+//            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), AuthenticatedTestHelper.getTokenWithoutPermission(), new ArrayList<String>()));
+//            
+//            logger.info("try to enrich via public template as template owner... should work");
+//            assertEquals(HttpStatus.OK.value(), doLinking(nifContent, publicTemplate.getIdentifier(), AuthenticatedTestHelper.getTokenWithPermission(), new ArrayList<String>()));
+//        } finally {
+//            logger.info("delete private template");
+//            ormh.deleteEntity(privateTemplate.getIdentifier(),AuthenticatedTestHelper.getTokenWithPermission(),HttpStatus.OK);
+//            logger.info("delete public template");
+//            ormh.deleteEntity(publicTemplate.getIdentifier(),AuthenticatedTestHelper.getTokenWithPermission(),HttpStatus.OK);
+//        }
+//    }
 
     private Template constructTemplate(String label, String query, String endpoint, String description, String endpointType, String visibility) throws JsonProcessingException {
         if(endpoint==null)
