@@ -31,8 +31,8 @@
 	</parent>
   
 	<artifactId>publishing</artifactId>
-	<version>0.7</version>	
-  <groupId>eu.freme.e-services</groupId>
+	<version>0.8-SNAPSHOT</version>	
+  	<groupId>eu.freme.e-services</groupId>
   
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

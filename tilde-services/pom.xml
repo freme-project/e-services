@@ -24,7 +24,7 @@
     <artifactId>freme-parent</artifactId>
     <version>0.12</version>
   </parent>
-  <version>0.8</version> 
+  <version>0.9-SNAPSHOT</version> 
   <artifactId>tilde-services</artifactId>
   <groupId>eu.freme.e-services</groupId>
     <dependencies>
