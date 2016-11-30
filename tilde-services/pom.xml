@@ -27,6 +27,16 @@
   <version>0.9-SNAPSHOT</version> 
   <artifactId>tilde-services</artifactId>
   <groupId>eu.freme.e-services</groupId>
+  
+	<developers>
+		<developer>
+			<name>Jan Nehring</name>
+			<email>jan.nehring@dfki.de</email>
+			<organization>DFKI</organization>
+			<organizationUrl>http://www.dfki.de</organizationUrl>
+		</developer>
+	</developers>
+  
     <dependencies>
         <dependency>
             <groupId>eu.freme.bservices</groupId>
