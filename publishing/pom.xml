@@ -34,6 +34,22 @@
 	<version>0.8-SNAPSHOT</version>	
   	<groupId>eu.freme.e-services</groupId>
   
+  	<developers>
+		<developer>
+			<name>Gerald Heasendonck</name>
+			<email>gerald.haesendonck@ugent.be</email>
+			<organization>iMinds</organization>
+			<organizationUrl>http://www.iminds.be</organizationUrl>
+		</developer>
+		<developer>
+			<name>Pieter Heyvaert</name>
+			<email>pheyvaer.heyvaert@ugent.be</email>
+			<organization>iMinds</organization>
+			<organizationUrl>http://www.iminds.be</organizationUrl>
+		</developer>
+	</developers>
+  
+  
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jersey.version>2.17</jersey.version>
