@@ -25,14 +25,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	
   <parent>
-		<groupId>eu.freme</groupId>
+		<groupId>eu.freme-project</groupId>
 		<artifactId>freme-parent</artifactId>
-		<version>0.12</version>
+		<version>0.13-SNAPSHOT</version>
 	</parent>
   
 	<artifactId>publishing</artifactId>
 	<version>0.8-SNAPSHOT</version>	
-  	<groupId>eu.freme.e-services</groupId>
+  	<groupId>eu.freme-project.e-services</groupId>
   
   	<developers>
 		<developer>
@@ -151,7 +151,7 @@
 
 	<dependencies>
 		<dependency>
-		    <groupId>eu.freme</groupId>
+		    <groupId>eu.freme-project</groupId>
 		    <artifactId>common</artifactId>
 		</dependency>
 		<dependency>
@@ -177,7 +177,7 @@
 		<!-- epublib dependencies -->
 
 		<dependency>
-			<groupId>eu.freme</groupId>
+			<groupId>eu.freme-project</groupId>
 			<artifactId>epublib-core</artifactId>
 			<version>0.4-SNAPSHOT</version>
 			<exclusions>
@@ -193,7 +193,7 @@
 
 		</dependency>
 		<dependency>
-			<groupId>eu.freme</groupId>
+			<groupId>eu.freme-project</groupId>
 			<artifactId>epublib-tools</artifactId>
 			<version>0.4-SNAPSHOT</version>
 			<exclusions>
@@ -209,7 +209,7 @@
 		</dependency>
     
         <dependency>
-            <groupId>eu.freme.bservices</groupId>
+            <groupId>eu.freme-project.bservices</groupId>
             <artifactId>test-helper</artifactId>
             <scope>test</scope>
         	</dependency>
