@@ -87,7 +87,7 @@ public class TildeETerminology extends BaseRestController {
 					.header("Content-Type", "application/turtle")
 					.queryString("mode", mode)
 					.queryString("collection", collection)
-					.header("Authentication", authCode)
+					.header("Authorization", authCode)
 					.queryString("key", key)
 					.queryString("nif-version", parameters.getNifVersion())
 					.body(serializeRDF(inputModel, TURTLE)).asString();
