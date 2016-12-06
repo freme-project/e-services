@@ -71,7 +71,7 @@ public class LinkingController extends BaseRestController{
             @RequestBody (required = false) String postBody,
             @RequestParam Map<String, String> allParams) {
         try {
-
+        	
             try {
                 new Long(templateIdStr);
             } catch (NumberFormatException e) {

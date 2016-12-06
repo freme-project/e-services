@@ -23,9 +23,11 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.hp.hpl.jena.rdf.model.*;
+
 import eu.freme.common.exception.*;
 import eu.freme.common.persistence.model.Template;
 import eu.freme.common.persistence.model.Template.Type;
+
 import org.apache.jena.atlas.web.HttpException;
 import org.apache.log4j.Logger;
 import org.linkeddatafragments.model.LinkedDataFragmentGraph;
@@ -33,6 +35,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -91,16 +94,23 @@ public class DataEnricher {
         StmtIterator ex = null;
         Model enrichment = null;
         try {
+        	
+        	ArrayList<String> allLinks = new ArrayList();
             ex = model.listStatements((Resource) null, model.getProperty("http://www.w3.org/2005/11/its/rdf#taIdentRef"), (RDFNode) null);
 
             enrichment = ModelFactory.createDefaultModel();
-
-            // Iterating through every entity and enriching it.
+            
+            // Collecting list of unique entity links for enrichment.
             while (ex.hasNext()) {
-
-                Statement stm = ex.nextStatement();
-                String entityURI = stm.getObject().asResource().getURI();
-
+              Statement stm = ex.nextStatement();
+              String entityURI = stm.getObject().asResource().getURI();
+            	if(!allLinks.contains(entityURI))
+            		allLinks.add(entityURI);
+            }
+            
+            // Iterating through every entity and enriching it.
+            for (String entityURI : allLinks) {
+            	
                 // Replacing the entity_uri fields in the template with the entity URI.
                 query = template.getQuery().replaceAll("@@@entity_uri@@@", entityURI);
 
@@ -110,10 +120,8 @@ public class DataEnricher {
                     resModel = (Map.Entry) e.next();
                 }
 
-
                 endpoint = template.getEndpoint();
-//                logger.error(endpoint);
-//       ///      logger.error(query);
+                
                 // Executing the enrichement.
                 QueryExecution e1 = null;
                 try{
