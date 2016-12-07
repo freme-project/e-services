@@ -35,8 +35,8 @@ public class NIF21HelperTest {
 	
 	@Before
 	public void setup() {
-		ApplicationContext context = IntegrationTestSetup
-				.getContext("NIF21Helper-test-package.xml");
+		ApplicationContext context = IntegrationTestSetup.getContext(TestConstants.pathToPackage);
+				//.getContext("NIF21Helper-test-package.xml");
 		testHelper = context.getBean(TestHelper.class);
 		validationHelper = context.getBean(ValidationHelper.class);
 		tildeTranslation = context.getBean(TildeETranslation.class);
