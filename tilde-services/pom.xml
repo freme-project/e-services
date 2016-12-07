@@ -23,6 +23,7 @@
     <groupId>eu.freme</groupId>
     <artifactId>freme-parent</artifactId>
     <version>0.13-SNAPSHOT</version>
+    <relativePath>../freme-parent/</relativePath>
   </parent>
   <version>0.9-SNAPSHOT</version> 
   <artifactId>tilde-services</artifactId>
