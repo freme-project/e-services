@@ -50,8 +50,9 @@
     </dependencies>
 
 
-
-  <scm>
-    <tag>e-service-parent-0.9</tag>
-  </scm>
+	<scm>
+		<connection>scm:git:git@github.com:freme-project/e-services.git</connection>
+		<url>scm:git:git@github.com/freme-project:e-services.git</url>
+		<developerConnection>scm:git:git@github.com:freme-project/e-services.git</developerConnection>
+	</scm>
 </project>

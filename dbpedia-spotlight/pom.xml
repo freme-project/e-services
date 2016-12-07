@@ -30,19 +30,21 @@
 		</developer>
 	</developers>
 
-		<dependencies>
-			<dependency>
-				<groupId>eu.freme-project.bservices</groupId>
-				<artifactId>test-helper</artifactId>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>eu.freme-project</groupId>
-				<artifactId>common</artifactId>
-			</dependency>
-		</dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>eu.freme-project.bservices</groupId>
+			<artifactId>test-helper</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.freme-project</groupId>
+			<artifactId>common</artifactId>
+		</dependency>
+	</dependencies>
 
-		<scm>
-			<tag>e-service-parent-0.9</tag>
-		</scm>
+	<scm>
+		<connection>scm:git:git@github.com:freme-project/e-services.git</connection>
+		<url>scm:git:git@github.com/freme-project:e-services.git</url>
+		<developerConnection>scm:git:git@github.com:freme-project/e-services.git</developerConnection>
+	</scm>
 </project>
