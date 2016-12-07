@@ -1,0 +1,50 @@
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix itsrdf: <http://www.w3.org/2005/11/its/rdf#> .
+@prefix its:   <http://www.w3.org/2005/11/its> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix nif:   <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#> .
+
+<http://freme-project.eu/#offset_5_6>
+        a                     nif:Phrase , nif:OffsetBasedString ;
+        nif:anchorOf          ","^^xsd:string ;
+        nif:annotationUnit    [ itsrdf:taAnnotatorsRef  <https://services.tilde.com/systems/translation/smt-c71f6f22-5e2a-4682-a4cc-2d97d38fac5e> ;
+                                itsrdf:target           ","@de
+                              ] ;
+        nif:beginIndex        "5"^^xsd:nonNegativeInteger ;
+        nif:endIndex          "6"^^xsd:nonNegativeInteger ;
+        nif:referenceContext  <http://freme-project.eu/#offset_0_13> .
+
+<http://freme-project.eu/#offset_0_13>
+        a                    nif:OffsetBasedString , nif:Context ;
+        nif:beginIndex       "0"^^xsd:nonNegativeInteger ;
+        nif:endIndex         "13"^^xsd:nonNegativeInteger ;
+        nif:isString         "Hello, world!"^^xsd:string ;
+        itsrdf:mtConfidence  "0.529759146955207" ;
+        itsrdf:target        "Guten Tag, Welt!"@de .
+
+<http://freme-project.eu/#offset_7_13>
+        a                     nif:Phrase , nif:OffsetBasedString ;
+        nif:anchorOf          "world!"^^xsd:string ;
+        nif:annotationUnit    [ itsrdf:taAnnotatorsRef  <https://services.tilde.com/systems/translation/smt-c71f6f22-5e2a-4682-a4cc-2d97d38fac5e> ;
+                                itsrdf:target           "Welt!"@de
+                              ] ;
+        nif:beginIndex        "7"^^xsd:nonNegativeInteger ;
+        nif:endIndex          "13"^^xsd:nonNegativeInteger ;
+        nif:referenceContext  <http://freme-project.eu/#offset_0_13> .
+
+<http://freme-project.eu/#collection>
+        a               nif:ContextCollection ;
+        nif:hasContext  <http://freme-project.eu/#offset_0_13> ;
+        <http://purl.org/dc/terms/conformsTo>
+                "http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core/2.1" .
+
+<http://freme-project.eu/#offset_0_5>
+        a                     nif:Phrase , nif:OffsetBasedString ;
+        nif:anchorOf          "Hello"^^xsd:string ;
+        nif:annotationUnit    [ itsrdf:taAnnotatorsRef  <https://services.tilde.com/systems/translation/smt-c71f6f22-5e2a-4682-a4cc-2d97d38fac5e> ;
+                                itsrdf:target           "Guten Tag"@de
+                              ] ;
+        nif:beginIndex        "0"^^xsd:nonNegativeInteger ;
+        nif:endIndex          "5"^^xsd:nonNegativeInteger ;
+        nif:referenceContext  <http://freme-project.eu/#offset_0_13> .
