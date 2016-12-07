@@ -24,6 +24,7 @@ import com.mashape.unirest.http.Unirest;
 
 import eu.freme.common.conversion.etranslate.TranslationConversionService;
 import eu.freme.common.conversion.rdf.RDFConstants;
+import eu.freme.common.conversion.rdf.NIF21Helper;
 import eu.freme.common.exception.BadRequestException;
 import eu.freme.common.exception.ExternalServiceFailedException;
 import eu.freme.common.exception.NIFVersionNotSupportedException;
@@ -152,6 +153,15 @@ public class TildeETranslation extends BaseRestController {
 			}
 		}
 
+		//add nif2.1 property conformsTo nif 2.1
+		NIF21Helper.addConformsTo(responseModel, parameters.getNifVersion());
+		
 		return  createSuccessResponse(responseModel, parameters.getOutformatString());
 			}
+
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
+	}
+	
+	
 }
