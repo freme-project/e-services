@@ -47,7 +47,12 @@ public class NIF21HelperTest {
 		return Unirest.post(url).queryString("source-lang", sourceLang)
 				.queryString("target-lang", targetLang);
 	}
-	
+	/**
+	 * test if addConforms is added to output NIF if nif-version is set to 2.1 and if
+	 * it is not added if nif-version is 2.0
+	 * @throws UnirestException
+	 * @throws IOException
+	 */
 	@Test
 	public void testAddConformsTo() throws UnirestException, IOException{
 //		<http://freme-project.eu/#collection>
@@ -55,6 +60,7 @@ public class NIF21HelperTest {
 //	        nif:hasContext  <http://freme-project.eu/#offset_0_13> ;
 //	        <http://purl.org/dc/terms/conformsTo>
 		String endpoint = "http://localhost:8080/mockups/file/TildeETranslation_helloWorld_nif21.ttl";
+		tildeTranslation.setEndpoint(endpoint);
 		
 		HttpResponse<String> response = baseRequest()
 				.queryString("informat", "text")
@@ -80,4 +86,5 @@ public class NIF21HelperTest {
 		assertTrue(response.getStatus() == 200);
 		assertFalse(response.getBody().contains("http://purl.org/dc/terms/conformsTo"));
 	}
+	
 }
