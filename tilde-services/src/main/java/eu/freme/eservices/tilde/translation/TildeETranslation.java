@@ -154,7 +154,7 @@ public class TildeETranslation extends BaseRestController {
 		}
 
 		//add nif2.1 property conformsTo nif 2.1
-		NIF21Helper.addConformsTo(responseModel, parameters.getNifVersion());
+		NIF21Helper.addConformsTo(responseModel, parameters.getNifVersion(), parameters.getPrefix());
 		
 		return  createSuccessResponse(responseModel, parameters.getOutformatString());
 			}
