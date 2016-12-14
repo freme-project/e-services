@@ -15,11 +15,11 @@
 	<parent>
 		<artifactId>freme-parent</artifactId>
 		<groupId>eu.freme</groupId>
-		<version>0.12</version>
+		<version>0.13</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9</version>
 	<groupId>eu.freme.e-services</groupId>
 	<artifactId>e-link</artifactId>
 

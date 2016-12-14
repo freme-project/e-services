@@ -22,10 +22,10 @@
   <parent>
     <groupId>eu.freme</groupId>
     <artifactId>freme-parent</artifactId>
-    <version>0.13-SNAPSHOT</version>
+    <version>0.13</version>
     <relativePath>../freme-parent/</relativePath>
   </parent>
-  <version>0.9-SNAPSHOT</version> 
+  <version>0.9</version> 
   <artifactId>tilde-services</artifactId>
   <groupId>eu.freme.e-services</groupId>
   
