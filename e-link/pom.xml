@@ -14,13 +14,13 @@
 
 	<parent>
 		<artifactId>freme-parent</artifactId>
-		<groupId>eu.freme</groupId>
-		<version>0.14-SNAPSHOT</version>
+		<groupId>eu.freme-project</groupId>
+		<version>0.15</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<version>0.10-SNAPSHOT</version>
-	<groupId>eu.freme.e-services</groupId>
+	<groupId>eu.freme-project.e-services</groupId>
 	<artifactId>e-link</artifactId>
 
 	<developers>
@@ -45,37 +45,19 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>eu.freme.bservices</groupId>
+			<groupId>eu.freme-project.bservices</groupId>
 			<artifactId>test-helper</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>eu.freme</groupId>
+			<groupId>eu.freme-project</groupId>
 			<artifactId>common</artifactId>
 		</dependency>
 	</dependencies>
 
-
-	<repositories>
-		<repository>
-			<id>freme-release</id>
-			<name>freme-nexus</name>
-			<url>http://rv1443.1blu.de/nexus/content/repositories/releases/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>freme-nexus</id>
-			<name>freme-nexus</name>
-			<url>http://rv1443.1blu.de/nexus/content/repositories/snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
 	<scm>
-		<tag>e-service-parent-0.9</tag>
+		<connection>scm:git:git@github.com:freme-project/e-services.git</connection>
+		<url>scm:git:git@github.com/freme-project:e-services.git</url>
+		<developerConnection>scm:git:git@github.com:freme-project/e-services.git</developerConnection>
 	</scm>
 </project>
