@@ -17,6 +17,12 @@
 	<version>0.10-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<parent>
+		<groupId>eu.freme-project</groupId>
+		<artifactId>freme-parent</groupId>
+		<version>0.17</version>
+	</parent>
+
 	<modules>
 		<module>tilde-services</module>
 		<module>dbpedia-spotlight</module>

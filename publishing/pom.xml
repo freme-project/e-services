@@ -15,8 +15,8 @@
 
 	<parent>
 		<groupId>eu.freme-project</groupId>
-		<artifactId>freme-parent</artifactId>
-		<version>0.17</version>
+		<artifactId>e-services-parent</artifactId>
+		<version>0.10-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>publishing</artifactId>

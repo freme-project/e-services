@@ -21,8 +21,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>eu.freme-project</groupId>
-    <artifactId>freme-parent</artifactId>
-    <version>0.17</version>
+    <artifactId>e-services-parent</artifactId>
+    <version>0.10-SNAPSHOT</version>
   </parent>
   <version>0.10-SNAPSHOT</version> 
   <artifactId>tilde-services</artifactId>
