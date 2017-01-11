@@ -13,12 +13,12 @@
 	<parent>
 		<groupId>eu.freme-project.e-services</groupId>
 		<artifactId>e-service-parent</artifactId>
-		<version>0.15</version>
+		<version>0.16-SNAPSHOT</version>
   		<relativePath>../</relativePath>
 	</parent>
 
 	<artifactId>dbpedia-spotlight</artifactId>
-	<version>0.8</version>
+	<version>0.9-SNAPSHOT</version>
 	<groupId>eu.freme-project.e-services</groupId>
 
 	<developers>
@@ -46,6 +46,6 @@
 		<connection>scm:git:git@github.com:freme-project/e-services.git</connection>
 		<url>scm:git:git@github.com/freme-project:e-services.git</url>
 		<developerConnection>scm:git:git@github.com:freme-project/e-services.git</developerConnection>
-	  <tag>e-service-parent-0.15</tag>
+	  <tag>HEAD</tag>
   </scm>
 </project>
