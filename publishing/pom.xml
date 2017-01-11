@@ -14,9 +14,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>eu.freme-project</groupId>
-		<artifactId>e-services-parent</artifactId>
+		<groupId>eu.freme-project.e-services</groupId>
+		<artifactId>e-service-parent</artifactId>
 		<version>0.10-SNAPSHOT</version>
+	 	<relativePath>../</relativePath>
 	</parent>
 
 	<artifactId>publishing</artifactId>

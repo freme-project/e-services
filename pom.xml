@@ -19,7 +19,7 @@
 
 	<parent>
 		<groupId>eu.freme-project</groupId>
-		<artifactId>freme-parent</groupId>
+		<artifactId>freme-parent</artifactId>
 		<version>0.17</version>
 	</parent>
 
