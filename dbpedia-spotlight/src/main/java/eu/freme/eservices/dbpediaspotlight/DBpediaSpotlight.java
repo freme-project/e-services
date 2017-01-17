@@ -47,7 +47,7 @@ public class DBpediaSpotlight extends BaseRestController {
 
     Logger logger = Logger.getLogger(DBpediaSpotlight.class);
 
-    @Value("${freme.eentity.dbpediaSpotlightEndpointUrl:http://spotlight.nlp2rdf.aksw.org/spotlight}")
+    @Value("${freme.eentity.dbpediaSpotlightEndpointUrl:http://www.dbpedia-spotlight.com/%s/annotate}")
     String dbpediaSpotlightUrl;
 
     @RequestMapping(value = "/e-entity/dbpedia-spotlight/documents", method = {
