@@ -56,7 +56,7 @@ public class DBpediaSpotlightTest {
         vh = context.getBean(ValidationHelper.class);
     }
 
-    @Value("${freme.eentity.dbpediaSpotlightEndpointUrl:http://spotlight.nlp2rdf.aksw.org/spotlight}")
+    @Value("${freme.eentity.dbpediaSpotlightEndpointUrl:http://www.dbpedia-spotlight.com/en/annotate}")
     String dbpediaSpotlightUrl;
 
     @Test

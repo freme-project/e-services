@@ -155,7 +155,13 @@ public class DBpediaSpotlight extends BaseRestController {
                 confidenceParam = "0.3";
             }
 
-            HttpResponse ex = Unirest.post(dbpediaSpotlightUrl + "?f=text&t=direct&confidence=" + confidenceParam + "&prefix=" + URLEncoder.encode(prefix, "UTF-8")).header("Content-Type", "application/x-www-form-urlencoded").body("i=" + URLEncoder.encode(text, "UTF-8")).asString();
+            HttpResponse ex = Unirest.post(String.format(dbpediaSpotlightUrl, languageParam))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Accept", "text/turtle")
+                    .field("confidence", confidenceParam)
+                    .field("prefix", prefix)
+                    .field("text", text)
+                    .asString();
             if(ex.getStatus() != HttpStatus.OK.value()) {
                 if(ex.getStatus() == HttpStatus.BAD_REQUEST.value()) {
                     throw new BadRequestException((String)ex.getBody());
@@ -168,8 +174,6 @@ public class DBpediaSpotlight extends BaseRestController {
             }
         } catch (UnirestException e) {
             throw new ExternalServiceFailedException(e.getMessage());
-        } catch (UnsupportedEncodingException e) {
-           throw new BadRequestException("Unsupported Encoding: "+e.getMessage());
         }
     }
 
