@@ -68,12 +68,6 @@ public class DBpediaSpotlight extends BaseRestController {
             inModel = ModelFactory.createDefaultModel();
             outModel = ModelFactory.createDefaultModel();
 
-            // Check the language parameter.
-            if (!languageParam.equals("en")) {
-                // The language specified with the langauge parameter is not supported.
-                throw new eu.freme.common.exception.BadRequestException("Unsupported language [" + languageParam + "].");
-            }
-
             String textForProcessing = null;
 
             if (nifParameters.getInformatString().equals(SerializationFormatMapper.PLAINTEXT)) {
