@@ -14,12 +14,12 @@
 	<parent>
 		<artifactId>e-service-parent</artifactId>
 		<groupId>eu.freme-project.e-services</groupId>
-		<version>1.2-SNAPSHOT</version>
+		<version>1.1-SNAPSHOT</version>
 	        <relativePath>../</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.1-SNAPSHOT</version>
 	<groupId>eu.freme-project.e-services</groupId>
 	<artifactId>e-link</artifactId>
 
