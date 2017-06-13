@@ -41,7 +41,7 @@ import java.io.InputStream;
 
 /**
  *
- * @author Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>
+ * @author Pieter Heyvaert - pheyvaer.heyvaert@ugent.be
  */
 @RestController
 @SuppressWarnings("unused")

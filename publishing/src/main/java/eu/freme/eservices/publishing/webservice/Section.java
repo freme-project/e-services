@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  *
- * @author Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>
+ * @author Pieter Heyvaert - pheyvaer.heyvaert@ugent.be
  */
 public class Section {
     

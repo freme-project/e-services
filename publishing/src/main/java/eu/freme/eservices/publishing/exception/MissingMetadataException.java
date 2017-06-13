@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
- * @author Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>
+ * @author Pieter Heyvaert - pheyvaer.heyvaert@ugent.be
  */
 
 @ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="")

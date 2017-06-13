@@ -38,7 +38,7 @@ import java.util.zip.ZipInputStream;
 
 /**
  *
- * @author Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>
+ * @author Pieter Heyvaert - pheyvaer.heyvaert@ugent.be
  */
 public class EPublishingService {
 

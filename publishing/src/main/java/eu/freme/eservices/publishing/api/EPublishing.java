@@ -48,7 +48,7 @@ import javax.annotation.PostConstruct;
 
 /**
  *
- * @author Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>
+ * @author Pieter Heyvaert - pheyvaer.heyvaert@ugent.be
  */
 @RestController
 public class EPublishing {

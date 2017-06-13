@@ -31,7 +31,7 @@ import java.io.Closeable;
 
 /**
  *
- * @author Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>
+ * @author Pieter Heyvaert - pheyvaer.heyvaert@ugent.be
  */
 @SpringBootApplication
 @ComponentScan(basePackages = "eu.freme.eservices.epublishing")
