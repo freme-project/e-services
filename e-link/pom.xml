@@ -14,12 +14,12 @@
 	<parent>
 		<artifactId>e-service-parent</artifactId>
 		<groupId>eu.freme-project.e-services</groupId>
-		<version>1.1</version>
+		<version>1.2-SNAPSHOT</version>
 	        <relativePath>../</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<version>1.1</version>
+	<version>1.2-SNAPSHOT</version>
 	<groupId>eu.freme-project.e-services</groupId>
 	<artifactId>e-link</artifactId>
 
@@ -59,6 +59,6 @@
 		<connection>scm:git:git@github.com:freme-project/e-services.git</connection>
 		<url>scm:git:git@github.com/freme-project:e-services.git</url>
 		<developerConnection>scm:git:git@github.com:freme-project/e-services.git</developerConnection>
-	  <tag>e-service-parent-1.1</tag>
+	  <tag>HEAD</tag>
   </scm>
 </project>
